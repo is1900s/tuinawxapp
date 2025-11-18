@@ -40,12 +40,12 @@
 
     <view class="service-content">
       <view class="service-header">
-        <image class="service-image" src="{{orderInfo.service?.icon}}" mode="aspectFill" />
+        <image class="service-image" src="{{orderInfo.service.icon}}" mode="aspectFill" />
         <view class="service-info">
-          <text class="service-name">{{orderInfo.service?.name}}</text>
-          <text class="service-desc">{{orderInfo.service?.description}}</text>
+          <text class="service-name">{{orderInfo.service.name}}</text>
+          <text class="service-desc">{{orderInfo.service.description}}</text>
           <view class="service-meta">
-            <text class="service-duration">{{orderInfo.service?.duration}}分钟</text>
+            <text class="service-duration">{{orderInfo.service.duration}}分钟</text>
             <text class="service-price">¥{{orderInfo.basePrice}}</text>
           </view>
         </view>
@@ -82,13 +82,13 @@
 
     <view class="technician-content">
       <view class="technician-header">
-        <image class="technician-avatar" src="{{orderInfo.technician?.avatar}}" mode="aspectFill" />
+        <image class="technician-avatar" src="{{orderInfo.technician.avatar}}" mode="aspectFill" />
         <view class="technician-info">
-          <text class="technician-name">{{orderInfo.technician?.name}}</text>
+          <text class="technician-name">{{orderInfo.technician.name}}</text>
           <view class="technician-meta">
-            <text class="technician-rating">{{orderInfo.technician?.rating}} ⭐</text>
-            <text class="technician-orders">{{orderInfo.technician?.orderCount}}单</text>
-            <text class="technician-badge" wx:if="{{orderInfo.technician?.verified}}">已认证</text>
+            <text class="technician-rating">{{orderInfo.technician.rating}} ⭐</text>
+            <text class="technician-orders">{{orderInfo.technician.orderCount}}单</text>
+            <text class="technician-badge" wx:if="{{orderInfo.technician.verified}}">已认证</text>
           </view>
         </view>
         <view class="technician-actions">
@@ -99,7 +99,7 @@
       </view>
 
       <!-- 技师技能 -->
-      <view class="technician-skills" wx:if="{{orderInfo.technician?.skills}}">
+      <view class="technician-skills" wx:if="{{orderInfo.technician.skills}}">
         <text
           class="skill-tag"
           wx:for="{{orderInfo.technician.skills}}"
@@ -120,12 +120,12 @@
       <view class="address-header">
         <text class="address-icon">📍</text>
         <view class="address-info">
-          <text class="address-name">{{orderInfo.address?.name}}</text>
-          <text class="address-phone">{{orderInfo.address?.phone}}</text>
+          <text class="address-name">{{orderInfo.address.name}}</text>
+          <text class="address-phone">{{orderInfo.address.phone}}</text>
         </view>
       </view>
-      <text class="address-detail">{{orderInfo.address?.fullAddress}}</text>
-      <text class="address-note" wx:if="{{orderInfo.address?.note}}">
+      <text class="address-detail">{{orderInfo.address.fullAddress}}</text>
+      <text class="address-note" wx:if="{{orderInfo.address.note}}">
         备注：{{orderInfo.address.note}}
       </text>
     </view>

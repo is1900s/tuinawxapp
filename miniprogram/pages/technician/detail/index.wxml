@@ -60,7 +60,7 @@
   <view class="service-section card">
     <view class="section-header">
       <text class="section-title">服务项目</text>
-      <text class="service-count">{{technicianInfo.services?.length || 0}}项</text>
+      <text class="service-count">{{technicianInfo.services.length || 0}}项</text>
     </view>
 
     <view class="service-list">
