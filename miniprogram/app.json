@@ -24,27 +24,27 @@
     "list": [
       {
         "pagePath": "pages/home/index",
-        "text": "首页",
-        "iconPath": "images/tab-home.png",
-        "selectedIconPath": "images/tab-home-active.png"
+        "text": "首页"
+        // "iconPath": "images/tab-home.png",
+        // "selectedIconPath": "images/tab-home-active.png"
       },
       {
         "pagePath": "pages/technician/list/index",
-        "text": "技师",
-        "iconPath": "images/tab-technician.png",
-        "selectedIconPath": "images/tab-technician-active.png"
+        "text": "技师"
+        // "iconPath": "images/tab-technician.png",
+        // "selectedIconPath": "images/tab-technician-active.png"
       },
       {
         "pagePath": "pages/order/list/index",
-        "text": "订单",
-        "iconPath": "images/tab-order.png",
-        "selectedIconPath": "images/tab-order-active.png"
+        "text": "订单"
+        // "iconPath": "images/tab-order.png",
+        // "selectedIconPath": "images/tab-order-active.png"
       },
       {
         "pagePath": "pages/user/profile/index",
-        "text": "我的",
-        "iconPath": "images/tab-user.png",
-        "selectedIconPath": "images/tab-user-active.png"
+        "text": "我的"
+        // "iconPath": "images/tab-user.png",
+        // "selectedIconPath": "images/tab-user-active.png"
       }
     ]
   },
