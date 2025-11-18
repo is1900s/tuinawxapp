@@ -333,7 +333,6 @@
     <text class="toggle-icon">🗺️</text>
     <text class="toggle-text">查看位置</text>
   </view>
-</view>
 
 <!-- 图片预览 -->
 <view class="image-preview-modal {{showImagePreview ? 'show' : ''}}" bindtap="onImagePreviewClose">
