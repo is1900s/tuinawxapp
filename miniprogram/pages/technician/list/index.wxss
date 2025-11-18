@@ -1,0 +1,732 @@
+/* 技师列表页样式 */
+.technician-list-page {
+  background-color: #f8f8f8;
+  min-height: 100vh;
+}
+
+/* 筛选栏 */
+.filter-bar {
+  background-color: #fff;
+  padding-bottom: 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+.search-section {
+  padding: 20rpx;
+}
+
+.search-input {
+  display: flex;
+  align-items: center;
+  background-color: #f2f2f7;
+  border-radius: 25rpx;
+  padding: 20rpx 30rpx;
+  gap: 15rpx;
+}
+
+.search-icon {
+  font-size: 32rpx;
+  color: #999;
+}
+
+.search-placeholder {
+  font-size: 28rpx;
+  color: #999;
+}
+
+.filter-scroll {
+  white-space: nowrap;
+}
+
+.filter-options {
+  display: flex;
+  padding: 0 20rpx;
+  gap: 30rpx;
+  overflow-x: auto;
+}
+
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  flex-shrink: 0;
+}
+
+.filter-label {
+  font-size: 24rpx;
+  color: #666;
+  white-space: nowrap;
+}
+
+.filter-values {
+  display: flex;
+  gap: 15rpx;
+}
+
+.filter-value {
+  font-size: 24rpx;
+  color: #666;
+  padding: 10rpx 20rpx;
+  border-radius: 20rpx;
+  background-color: #f2f2f7;
+  white-space: nowrap;
+  transition: all 0.3s ease;
+}
+
+.filter-value.active {
+  background-color: #007AFF;
+  color: #fff;
+}
+
+/* 统计信息 */
+.stats-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx;
+  background-color: #f8f8f8;
+}
+
+.stats-text {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.location-info {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+
+.location-icon {
+  font-size: 24rpx;
+  color: #007AFF;
+}
+
+.location-text {
+  font-size: 24rpx;
+  color: #007AFF;
+}
+
+/* 技师列表 */
+.technician-scroll {
+  height: calc(100vh - 300rpx);
+}
+
+.technician-list {
+  padding: 20rpx;
+}
+
+.technician-item {
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.technician-item:active {
+  transform: scale(0.98);
+}
+
+.technician-header {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.technician-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  border: 3rpx solid #f2f2f7;
+}
+
+.technician-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.technician-name-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10rpx;
+}
+
+.technician-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  max-width: 200rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.technician-badges {
+  display: flex;
+  gap: 8rpx;
+  flex-shrink: 0;
+}
+
+.badge {
+  font-size: 18rpx;
+  padding: 6rpx 12rpx;
+  border-radius: 12rpx;
+  color: #fff;
+  font-weight: 500;
+}
+
+.badge-verified {
+  background-color: #007AFF;
+}
+
+.badge-experienced {
+  background-color: #FF9500;
+}
+
+.badge-top {
+  background-color: #FF3B30;
+}
+
+.technician-meta {
+  margin-bottom: 12rpx;
+}
+
+.rating-info {
+  display: flex;
+  align-items: center;
+  gap: 15rpx;
+  margin-bottom: 8rpx;
+}
+
+.rating-stars {
+  font-size: 24rpx;
+  color: #FF9500;
+  font-weight: 500;
+}
+
+.order-count,
+.response-time {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.location-info {
+  display: flex;
+  align-items: center;
+  gap: 15rpx;
+}
+
+.distance {
+  font-size: 24rpx;
+  color: #007AFF;
+  font-weight: 500;
+}
+
+.estimate-time {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.technician-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+}
+
+.technician-tags .tag {
+  font-size: 20rpx;
+  padding: 6rpx 12rpx;
+  background-color: #f2f2f7;
+  color: #666;
+  border-radius: 12rpx;
+}
+
+/* 服务项目预览 */
+.service-preview {
+  margin-bottom: 20rpx;
+}
+
+.service-title {
+  font-size: 24rpx;
+  color: #666;
+  margin-bottom: 10rpx;
+}
+
+.service-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10rpx;
+  align-items: center;
+}
+
+.service-item {
+  font-size: 22rpx;
+  color: #007AFF;
+  background-color: #f2f8ff;
+  padding: 8rpx 12rpx;
+  border-radius: 8rpx;
+}
+
+.service-more {
+  font-size: 22rpx;
+  color: #999;
+}
+
+/* 价格区间 */
+.price-range {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  margin-bottom: 20rpx;
+  padding: 15rpx;
+  background-color: #f8f8f8;
+  border-radius: 8rpx;
+}
+
+.price-label {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.price-text {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #FF3B30;
+}
+
+.price-unit {
+  font-size: 22rpx;
+  color: #999;
+}
+
+/* 操作按钮 */
+.action-buttons {
+  display: flex;
+  gap: 15rpx;
+}
+
+.action-buttons .btn {
+  flex: 1;
+  padding: 20rpx;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  text-align: center;
+  border: none;
+  outline: none;
+}
+
+.btn-outline {
+  background-color: #fff;
+  color: #007AFF;
+  border: 1rpx solid #007AFF;
+}
+
+.btn-primary {
+  background-color: #007AFF;
+  color: #fff;
+}
+
+/* 状态指示器 */
+.status-indicator {
+  position: absolute;
+  top: 20rpx;
+  right: 20rpx;
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 8rpx 12rpx;
+  border-radius: 12rpx;
+}
+
+.status-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+}
+
+.status-available {
+  background-color: #34C759;
+}
+
+.status-busy {
+  background-color: #FF9500;
+}
+
+.status-offline {
+  background-color: #8E8E93;
+}
+
+.status-text {
+  font-size: 20rpx;
+  color: #666;
+}
+
+/* 加载状态 */
+.load-more {
+  text-align: center;
+  padding: 40rpx;
+}
+
+.load-text {
+  font-size: 26rpx;
+  color: #007AFF;
+}
+
+.no-more {
+  text-align: center;
+  padding: 40rpx;
+}
+
+.no-more-text {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 空状态 */
+.empty-state {
+  text-align: center;
+  padding: 80rpx 40rpx;
+}
+
+.empty-icon {
+  font-size: 80rpx;
+  margin-bottom: 20rpx;
+  display: block;
+}
+
+.empty-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 15rpx;
+  display: block;
+}
+
+.empty-desc {
+  font-size: 26rpx;
+  color: #666;
+  margin-bottom: 30rpx;
+  display: block;
+}
+
+.btn {
+  padding: 20rpx 40rpx;
+  border-radius: 25rpx;
+  font-size: 28rpx;
+  border: none;
+  outline: none;
+}
+
+.btn-primary {
+  background-color: #007AFF;
+  color: #fff;
+}
+
+/* 地图模式切换 */
+.map-toggle {
+  position: fixed;
+  bottom: 160rpx;
+  right: 20rpx;
+  background-color: #fff;
+  padding: 15rpx 20rpx;
+  border-radius: 25rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  z-index: 99;
+}
+
+.toggle-icon {
+  font-size: 24rpx;
+}
+
+.toggle-text {
+  font-size: 24rpx;
+  color: #333;
+}
+
+/* 回到顶部 */
+.back-to-top {
+  position: fixed;
+  bottom: 250rpx;
+  right: 20rpx;
+  width: 80rpx;
+  height: 80rpx;
+  background-color: rgba(0, 122, 255, 0.8);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 99;
+}
+
+.back-to-top.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.top-icon {
+  font-size: 32rpx;
+  color: #fff;
+}
+
+/* 加载遮罩 */
+.loading-mask {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.loading-icon {
+  font-size: 60rpx;
+  animation: spin 1s linear infinite;
+}
+
+.loading-text {
+  font-size: 26rpx;
+  color: #666;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 筛选下拉面板 */
+.filter-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.filter-panel.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.filter-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  border-radius: 0 0 30rpx 30rpx;
+  max-height: 80vh;
+  overflow-y: auto;
+  transform: translateY(-100%);
+  transition: transform 0.3s ease;
+}
+
+.filter-panel.show .filter-content {
+  transform: translateY(0);
+}
+
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #f2f2f7;
+}
+
+.filter-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.filter-reset {
+  font-size: 26rpx;
+  color: #007AFF;
+}
+
+.filter-body {
+  padding: 30rpx;
+}
+
+.filter-group-panel {
+  margin-bottom: 40rpx;
+}
+
+.filter-group-title {
+  font-size: 28rpx;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 20rpx;
+}
+
+.filter-options-panel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15rpx;
+}
+
+.filter-option {
+  padding: 15rpx 25rpx;
+  border-radius: 25rpx;
+  background-color: #f2f2f7;
+  font-size: 26rpx;
+  color: #666;
+  border: 2rpx solid transparent;
+  transition: all 0.3s ease;
+}
+
+.filter-option.active {
+  background-color: #007AFF;
+  color: #fff;
+  border-color: #007AFF;
+}
+
+.filter-footer {
+  display: flex;
+  gap: 20rpx;
+  padding: 30rpx;
+  border-top: 1rpx solid #f2f2f7;
+}
+
+.filter-btn {
+  flex: 1;
+  padding: 25rpx;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  text-align: center;
+  border: none;
+  outline: none;
+}
+
+.filter-cancel {
+  background-color: #f2f2f7;
+  color: #666;
+}
+
+.filter-confirm {
+  background-color: #007AFF;
+  color: #fff;
+}
+
+/* 响应式适配 */
+@media (max-width: 320px) {
+  .filter-values {
+    gap: 10rpx;
+  }
+
+  .filter-value {
+    padding: 8rpx 15rpx;
+    font-size: 22rpx;
+  }
+
+  .technician-name {
+    font-size: 28rpx;
+  }
+
+  .technician-badges {
+    flex-direction: column;
+    gap: 5rpx;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 10rpx;
+  }
+
+  .map-toggle,
+  .back-to-top {
+    transform: scale(0.9);
+  }
+}
+
+/* 动画效果 */
+.technician-item {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 骨架屏效果 */
+.skeleton {
+  background: linear-gradient(90deg, #f2f2f7 25%, #e6e6ec 50%, #f2f2f7 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+}
+
+.skeleton-text {
+  height: 24rpx;
+  border-radius: 12rpx;
+  margin-bottom: 10rpx;
+}
+
+.skeleton-text.title {
+  width: 150rpx;
+  height: 32rpx;
+}
+
+.skeleton-text.short {
+  width: 80rpx;
+}
+
+.skeleton-text.medium {
+  width: 120rpx;
+}
+
+.skeleton-text.long {
+  width: 200rpx;
+}

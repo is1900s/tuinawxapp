@@ -1,0 +1,358 @@
+<!-- 用户个人中心页 -->
+<scroll-view class="profile-page" scroll-y="true">
+  <!-- 用户头部信息 -->
+  <view class="user-header">
+    <!-- 背景装饰 -->
+    <view class="header-decoration"></view>
+
+    <!-- 用户基本信息 -->
+    <view class="user-info">
+      <!-- 头像 -->
+      <view class="avatar-section" bindtap="onAvatarTap">
+        <image class="user-avatar" src="{{userInfo.avatar || '/assets/images/avatars/default.png'}}" mode="aspectFill" />
+        <view class="avatar-edit" wx:if="{{isCurrentUser}}">
+          <text class="edit-icon">📷</text>
+        </view>
+      </view>
+
+      <!-- 用户名和状态 -->
+      <view class="user-details">
+        <text class="user-name">{{userInfo.nickName || '微信用户'}}</text>
+        <view class="user-status">
+          <text class="status-text">{{getUserStatusText()}}</text>
+          <view class="user-badges">
+            <text class="badge badge-vip" wx:if="{{userInfo.vipLevel}}">VIP{{userInfo.vipLevel}}</text>
+            <text class="badge badge-new" wx:if="{{isNewUser}}">新用户</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 统计信息 -->
+      <view class="user-stats">
+        <view class="stat-item" bindtap="onOrdersTap">
+          <text class="stat-number">{{userStats.orderCount || 0}}</text>
+          <text class="stat-label">订单</text>
+        </view>
+        <view class="stat-item" bindtap="onFavoritesTap">
+          <text class="stat-number">{{userStats.favoriteCount || 0}}</text>
+          <text class="stat-label">收藏</text>
+        </view>
+        <view class="stat-item" bindtap="onCouponsTap">
+          <text class="stat-number">{{userStats.couponCount || 0}}</text>
+          <text class="stat-label">优惠券</text>
+        </view>
+        <view class="stat-item" bindtap="onPointsTap">
+          <text class="stat-number">{{userStats.points || 0}}</text>
+          <text class="stat-label">积分</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- VIP会员卡片 -->
+  <view class="vip-card" wx:if="{{!userInfo.vipLevel}}" bindtap="onVipTap">
+    <view class="vip-content">
+      <view class="vip-info">
+        <text class="vip-title">开通VIP会员</text>
+        <text class="vip-desc">享受专属优惠和特权服务</text>
+      </view>
+      <text class="vip-action">立即开通</text>
+    </view>
+    <view class="vip-decoration">
+      <text class="vip-icon">👑</text>
+    </view>
+  </view>
+
+  <!-- 订单管理 -->
+  <view class="order-section card">
+    <view class="section-header">
+      <text class="section-title">我的订单</text>
+      <text class="section-more" bindtap="onAllOrdersTap">全部订单 ></text>
+    </view>
+
+    <view class="order-types">
+      <view
+        class="order-type"
+        wx:for="{{orderTypes}}"
+        wx:key="type"
+        bindtap="onOrderTypeTap"
+        data-type="{{item.type}}"
+      >
+        <view class="type-icon-wrapper">
+          <text class="type-icon">{{item.icon}}</text>
+          <view class="type-badge" wx:if="{{item.count > 0}}">
+            <text class="badge-count">{{item.count > 99 ? '99+' : item.count}}</text>
+          </view>
+        </view>
+        <text class="type-name">{{item.name}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 常用工具 -->
+  <view class="tools-section card">
+    <view class="section-header">
+      <text class="section-title">常用工具</text>
+    </view>
+
+    <view class="tools-grid">
+      <view
+        class="tool-item"
+        wx:for="{{commonTools}}"
+        wx:key="name"
+        bindtap="onToolTap"
+        data-tool="{{item}}"
+      >
+        <view class="tool-icon-wrapper {{item.color}}">
+          <text class="tool-icon">{{item.icon}}</text>
+        </view>
+        <text class="tool-name">{{item.name}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 服务记录 -->
+  <view class="service-section card">
+    <view class="section-header">
+      <text class="section-title">服务记录</text>
+      <text class="section-more" bindtap="onAllServicesTap">查看全部 ></text>
+    </view>
+
+    <view class="service-list">
+      <view
+        class="service-item"
+        wx:for="{{recentServices}}"
+        wx:key="id"
+        bindtap="onServiceTap"
+        data-service="{{item}}"
+      >
+        <image class="service-avatar" src="{{item.technicianAvatar}}" mode="aspectFill" />
+        <view class="service-info">
+          <text class="service-name">{{item.serviceName}}</text>
+          <text class="service-technician">{{item.technicianName}}</text>
+          <text class="service-date">{{item.date}}</text>
+        </view>
+        <view class="service-status status-{{item.status}}">
+          <text class="status-text">{{item.statusText}}</text>
+        </view>
+      </view>
+
+      <view class="empty-services" wx:if="{{recentServices.length === 0}}">
+        <text class="empty-icon">📋</text>
+        <text class="empty-text">暂无服务记录</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 我的优惠券 -->
+  <view class="coupons-section card" wx:if="{{availableCoupons.length > 0}}">
+    <view class="section-header">
+      <text class="section-title">优惠券</text>
+      <text class="section-more" bindtap="onAllCouponsTap">查看全部 ></text>
+    </view>
+
+    <scroll-view class="coupons-scroll" scroll-x="true">
+      <view class="coupons-list">
+        <view
+          class="coupon-item"
+          wx:for="{{availableCoupons.slice(0, 3)}}"
+          wx:key="id"
+          bindtap="onCouponTap"
+          data-coupon="{{item}}"
+        >
+          <view class="coupon-left">
+            <text class="coupon-amount">¥{{item.discount}}</text>
+            <text class="coupon-condition">满{{item.minAmount}}元可用</text>
+          </view>
+          <view class="coupon-right">
+            <text class="coupon-title">{{item.name}}</text>
+            <text class="coupon-expire">{{item.expireDate}}前有效</text>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 地址管理 -->
+  <view class="address-section card">
+    <view class="section-header">
+      <text class="section-title">地址管理</text>
+      <text class="section-more" bindtap="onAddressManageTap">管理地址 ></text>
+    </view>
+
+    <view class="address-list">
+      <view
+        class="address-item"
+        wx:for="{{userAddresses.slice(0, 2)}}"
+        wx:key="id"
+        bindtap="onAddressTap"
+        data-address="{{item}}"
+      >
+        <view class="address-info">
+          <view class="address-header">
+            <text class="address-name">{{item.name}}</text>
+            <text class="address-phone">{{item.phone}}</text>
+            <text class="address-tag" wx:if="{{item.isDefault}}">默认</text>
+          </view>
+          <text class="address-detail">{{item.fullAddress}}</text>
+        </view>
+        <text class="address-arrow">></text>
+      </view>
+
+      <view class="empty-address" wx:if="{{userAddresses.length === 0}}">
+        <text class="empty-text">还没有添加地址</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 设置选项 -->
+  <view class="settings-section card">
+    <view class="section-header">
+      <text class="section-title">设置</text>
+    </view>
+
+    <view class="settings-list">
+      <view
+        class="setting-item"
+        wx:for="{{settingsOptions}}"
+        wx:key="name"
+        bindtap="onSettingTap"
+        data-setting="{{item}}"
+      >
+        <view class="setting-left">
+          <text class="setting-icon">{{item.icon}}</text>
+          <text class="setting-name">{{item.name}}</text>
+        </view>
+        <view class="setting-right">
+          <text class="setting-value" wx:if="{{item.value}}">{{item.value}}</text>
+          <text class="setting-arrow">></text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 帮助与反馈 -->
+  <view class="help-section card">
+    <view class="section-header">
+      <text class="section-title">帮助与反馈</text>
+    </view>
+
+    <view class="help-options">
+      <view
+        class="help-item"
+        wx:for="{{helpOptions}}"
+        wx:key="name"
+        bindtap="onHelpTap"
+        data-help="{{item}}"
+      >
+        <text class="help-icon">{{item.icon}}</text>
+        <text class="help-name">{{item.name}}</text>
+        <text class="help-arrow">></text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 关于我们 -->
+  <view class="about-section card">
+    <view class="about-content">
+      <view class="app-info">
+        <text class="app-name">同城推拿</text>
+        <text class="app-version">版本 {{appVersion}}</text>
+      </view>
+      <text class="about-desc">专业的上门推拿服务平台</text>
+    </view>
+
+    <view class="about-actions">
+      <text class="about-action" bindtap="onAboutTap">关于我们</text>
+      <text class="about-divider">|</text>
+      <text class="about-action" bindtap="onPrivacyTap">隐私政策</text>
+      <text class="about-divider">|</text>
+      <text class="about-action" bindtap="onTermsTap">服务协议</text>
+    </view>
+  </view>
+
+  <!-- 底部间距 -->
+  <view class="bottom-spacer"></view>
+</scroll-view>
+
+<!-- 编辑资料弹窗 -->
+<view class="edit-profile-modal {{showEditModal ? 'show' : ''}}" bindtap="onEditModalClose">
+  <view class="edit-content" catchtap="onEditModalContentTap">
+    <view class="edit-header">
+      <text class="edit-title">编辑资料</text>
+      <text class="edit-close" bindtap="onEditModalClose">×</text>
+    </view>
+
+    <view class="edit-form">
+      <!-- 头像 -->
+      <view class="form-group">
+        <text class="form-label">头像</text>
+        <view class="avatar-upload" bindtap="onChooseAvatar">
+          <image class="upload-avatar" src="{{editForm.avatar || '/assets/images/avatars/default.png'}}" mode="aspectFill" />
+          <view class="upload-overlay">
+            <text class="upload-icon">📷</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 昵称 -->
+      <view class="form-group">
+        <text class="form-label">昵称</text>
+        <input
+          class="form-input"
+          type="text"
+          placeholder="请输入昵称"
+          value="{{editForm.nickName}}"
+          bindinput="onNickNameInput"
+          maxlength="20"
+        />
+      </view>
+
+      <!-- 性别 -->
+      <view class="form-group">
+        <text class="form-label">性别</text>
+        <radio-group class="gender-selector" bindchange="onGenderChange">
+          <label class="gender-option">
+            <radio value="male" checked="{{editForm.gender === 'male'}}" />
+            <text class="gender-text">男</text>
+          </label>
+          <label class="gender-option">
+            <radio value="female" checked="{{editForm.gender === 'female'}}" />
+            <text class="gender-text">女</text>
+          </label>
+        </radio-group>
+      </view>
+
+      <!-- 生日 -->
+      <view class="form-group">
+        <text class="form-label">生日</text>
+        <picker
+          mode="date"
+          value="{{editForm.birthday}}"
+          bindchange="onBirthdayChange"
+        >
+          <view class="picker-view">
+            <text class="picker-text">{{editForm.birthday || '请选择生日'}}</text>
+            <text class="picker-arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="edit-footer">
+      <button class="btn btn-outline" bindtap="onEditModalClose">取消</button>
+      <button class="btn btn-primary" bindtap="onSaveProfile">保存</button>
+    </view>
+  </view>
+</view>
+
+<!-- 图片预览 -->
+<view class="image-preview-modal {{showImagePreview ? 'show' : ''}}" bindtap="onImagePreviewClose">
+  <view class="preview-content" catchtap="onImagePreviewContentTap">
+    <image class="preview-image" src="{{previewImage}}" mode="aspectFit" />
+    <text class="preview-close" bindtap="onImagePreviewClose">×</text>
+  </view>
+</view>
+
+<!-- 底部安全区域 -->
+<view class="safe-area-bottom"></view>

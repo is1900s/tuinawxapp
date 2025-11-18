@@ -1,0 +1,375 @@
+<!-- 搜索页面 -->
+<view class="search-page">
+  <!-- 搜索头部 -->
+  <view class="search-header">
+    <view class="search-bar">
+      <view class="search-input-wrapper">
+        <text class="search-icon">🔍</text>
+        <input
+          class="search-input"
+          type="text"
+          placeholder="搜索技师、服务或订单"
+          value="{{searchKeyword}}"
+          bindinput="onSearchInput"
+          bindconfirm="onSearchConfirm"
+          focus="{{autoFocus}}"
+        />
+        <view class="clear-btn" wx:if="{{searchKeyword}}" bindtap="onClearSearch">
+          <text class="clear-icon">×</text>
+        </view>
+      </view>
+      <text class="cancel-btn" bindtap="onCancel">取消</text>
+    </view>
+
+    <!-- 搜索筛选 -->
+    <view class="search-filters" wx:if="{{showFilters}}">
+      <scroll-view class="filters-scroll" scroll-x="true">
+        <view class="filter-tabs">
+          <text
+            class="filter-tab {{currentFilter === 'all' ? 'active' : ''}}"
+            bindtap="onFilterChange"
+            data-filter="all"
+          >全部</text>
+          <text
+            class="filter-tab {{currentFilter === 'technician' ? 'active' : ''}}"
+            bindtap="onFilterChange"
+            data-filter="technician"
+          >技师</text>
+          <text
+            class="filter-tab {{currentFilter === 'service' ? 'active' : ''}}"
+            bindtap="onFilterChange"
+            data-filter="service"
+          >服务</text>
+          <text
+            class="filter-tab {{currentFilter === 'order' ? 'active' : ''}}"
+            bindtap="onFilterChange"
+            data-filter="order"
+          >订单</text>
+        </view>
+      </scroll-view>
+    </view>
+  </view>
+
+  <!-- 搜索内容区域 -->
+  <scroll-view class="search-content" scroll-y="true" style="height: {{contentHeight}}">
+    <!-- 搜索历史 -->
+    <view class="search-history" wx:if="{{!searchKeyword && searchHistory.length > 0}}">
+      <view class="history-header">
+        <text class="history-title">搜索历史</text>
+        <text class="history-clear" bindtap="onClearHistory">清空</text>
+      </view>
+      <view class="history-list">
+        <view
+          class="history-item"
+          wx:for="{{searchHistory}}"
+          wx:key="*this"
+          bindtap="onHistoryTap"
+          data-keyword="{{item}}"
+        >
+          <text class="history-icon">🕐</text>
+          <text class="history-text">{{item}}</text>
+          <text class="history-delete" bindtap="onHistoryDelete" data-keyword="{{item}}">×</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 热门搜索 -->
+    <view class="hot-search" wx:if="{{!searchKeyword}}">
+      <view class="hot-header">
+        <text class="hot-title">热门搜索</text>
+      </view>
+      <view class="hot-list">
+        <text
+          class="hot-item"
+          wx:for="{{hotSearches}}"
+          wx:key="*this"
+          bindtap="onHotTap"
+          data-keyword="{{item}}"
+        >{{item}}</text>
+      </view>
+    </view>
+
+    <!-- 推荐服务 -->
+    <view class="recommend-services" wx:if="{{!searchKeyword}}">
+      <view class="recommend-header">
+        <text class="recommend-title">推荐服务</text>
+        <text class="recommend-more" bindtap="onMoreServices">更多 ></text>
+      </view>
+      <view class="service-grid">
+        <view
+          class="service-item"
+          wx:for="{{recommendServices}}"
+          wx:key="id"
+          bindtap="onServiceTap"
+          data-service="{{item}}"
+        >
+          <image class="service-icon" src="{{item.icon}}" mode="aspectFit" />
+          <text class="service-name">{{item.name}}</text>
+          <text class="service-desc">{{item.description}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 搜索结果 -->
+    <view class="search-results" wx:if="{{searchKeyword}}">
+      <!-- 搜索状态提示 -->
+      <view class="search-status" wx:if="{{searching}}">
+        <text class="status-icon">⏳</text>
+        <text class="status-text">正在搜索...</text>
+      </view>
+
+      <!-- 搜索结果统计 -->
+      <view class="result-stats" wx:if="{{!searching && searchResults.length > 0}}">
+        <text class="stats-text">找到 {{totalResults}} 个相关结果</text>
+        <view class="sort-options" wx:if="{{currentFilter === 'technician'}}">
+          <text
+            class="sort-option {{sortBy === 'distance' ? 'active' : ''}}"
+            bindtap="onSortChange"
+            data-sort="distance"
+          >距离优先</text>
+          <text
+            class="sort-option {{sortBy === 'rating' ? 'active' : ''}}"
+            bindtap="onSortChange"
+            data-sort="rating"
+          >评分优先</text>
+        </view>
+      </view>
+
+      <!-- 技师搜索结果 -->
+      <view class="technician-results" wx:if="{{currentFilter === 'all' || currentFilter === 'technician'}}">
+        <view class="result-section-title" wx:if="{{currentFilter === 'all' && technicianResults.length > 0}}">
+          <text class="section-title">技师</text>
+        </view>
+        <view class="technician-list">
+          <view
+            class="technician-card"
+            wx:for="{{technicianResults}}"
+            wx:key="id"
+            bindtap="onTechnicianTap"
+            data-technician="{{item}}"
+          >
+            <image class="technician-avatar" src="{{item.avatar}}" mode="aspectFill" />
+            <view class="technician-info">
+              <text class="technician-name">{{item.name}}</text>
+              <view class="technician-meta">
+                <text class="rating">{{item.rating}} ⭐</text>
+                <text class="distance">{{item.distance}}km</text>
+              </view>
+              <text class="technician-desc">{{item.description}}</text>
+            </view>
+            <view class="technician-tags">
+              <text
+                class="tag"
+                wx:for="{{item.tags}}"
+                wx:for-item="tag"
+                wx:key="*this"
+              >{{tag}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 服务搜索结果 -->
+      <view class="service-results" wx:if="{{currentFilter === 'all' || currentFilter === 'service'}}">
+        <view class="result-section-title" wx:if="{{currentFilter === 'all' && serviceResults.length > 0}}">
+          <text class="section-title">服务</text>
+        </view>
+        <view class="service-result-list">
+          <view
+            class="service-result-card"
+            wx:for="{{serviceResults}}"
+            wx:key="id"
+            bindtap="onServiceResultTap"
+            data-service="{{item}}"
+          >
+            <view class="service-result-header">
+              <image class="service-result-icon" src="{{item.icon}}" mode="aspectFit" />
+              <view class="service-result-info">
+                <text class="service-result-name">{{item.name}}</text>
+                <text class="service-result-price">¥{{item.price}}/{{item.duration}}分钟</text>
+              </view>
+            </view>
+            <text class="service-result-desc">{{item.description}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 订单搜索结果 -->
+      <view class="order-results" wx:if="{{currentFilter === 'all' || currentFilter === 'order'}}">
+        <view class="result-section-title" wx:if="{{currentFilter === 'all' && orderResults.length > 0}}">
+          <text class="section-title">订单</text>
+        </view>
+        <view class="order-result-list">
+          <view
+            class="order-result-card"
+            wx:for="{{orderResults}}"
+            wx:key="id"
+            bindtap="onOrderTap"
+            data-order="{{item}}"
+          >
+            <view class="order-result-header">
+              <text class="order-no">{{item.orderNo}}</text>
+              <view class="order-status status-{{item.status}}">
+                <text class="status-text">{{getStatusText(item.status)}}</text>
+              </view>
+            </view>
+            <view class="order-result-content">
+              <text class="service-name">{{item.serviceName}}</text>
+              <text class="technician-name">技师：{{item.technicianName}}</text>
+              <text class="order-date">{{item.createdAt}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 无搜索结果 -->
+      <view class="empty-results" wx:if="{{!searching && searchResults.length === 0}}">
+        <text class="empty-icon">🔍</text>
+        <text class="empty-title">未找到相关结果</text>
+        <text class="empty-desc">建议尝试其他关键词或检查拼写</text>
+        <view class="empty-suggestions" wx:if="{{searchSuggestions.length > 0}}">
+          <text class="suggestions-title">搜索建议</text>
+          <view class="suggestions-list">
+            <text
+              class="suggestion-item"
+              wx:for="{{searchSuggestions}}"
+              wx:key="*this"
+              bindtap="onSuggestionTap"
+              data-keyword="{{item}}"
+            >{{item}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 加载更多 -->
+      <view class="load-more" wx:if="{{hasMore && !searching}}">
+        <text class="load-text">上拉加载更多</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 搜索建议下拉 -->
+  <view class="search-suggestions" wx:if="{{showSuggestions && suggestions.length > 0}}">
+    <view class="suggestions-list">
+      <view
+        class="suggestion-item"
+        wx:for="{{suggestions}}"
+        wx:key="*this"
+        bindtap="onSuggestionSelect"
+        data-suggestion="{{item}}"
+      >
+        <text class="suggestion-icon">💡</text>
+        <text class="suggestion-text">{{item}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 快捷操作栏 -->
+  <view class="quick-actions" wx:if="{{showQuickActions}}">
+    <view class="quick-action" bindtap="onVoiceSearch">
+      <text class="quick-icon">🎤</text>
+      <text class="quick-text">语音搜索</text>
+    </view>
+    <view class="quick-action" bindtap="onScanSearch">
+      <text class="quick-icon">📷</text>
+      <text class="quick-text">扫码搜索</text>
+    </view>
+    <view class="quick-action" bindtap="onNearbySearch">
+      <text class="quick-icon">📍</text>
+      <text class="quick-text">附近技师</text>
+    </view>
+  </view>
+
+  <!-- 搜索历史管理弹窗 -->
+  <view class="history-modal {{showHistoryModal ? 'show' : ''}}" bindtap="onHistoryModalClose">
+    <view class="history-content" catchtap="onHistoryModalContentTap">
+      <view class="history-modal-header">
+        <text class="modal-title">搜索历史管理</text>
+        <text class="modal-close" bindtap="onHistoryModalClose">×</text>
+      </view>
+
+      <view class="history-modal-body">
+        <view class="history-stats">
+          <text class="stats-text">共 {{searchHistory.length}} 条历史记录</text>
+          <text class="clear-all" bindtap="onClearAllHistory">全部清空</text>
+        </view>
+
+        <view class="history-options">
+          <label class="option-item">
+            <checkbox checked="{{saveHistory}}" bindchange="onSaveHistoryChange" />
+            <text class="option-text">保存搜索历史</text>
+          </label>
+          <label class="option-item">
+            <checkbox checked="{{smartSuggestion}}" bindchange="onSmartSuggestionChange" />
+            <text class="option-text">智能搜索建议</text>
+          </label>
+          <label class="option-item">
+            <checkbox checked="{{voiceSearch}}" bindchange="onVoiceSearchChange" />
+            <text class="option-text">语音搜索功能</text>
+          </label>
+        </view>
+
+        <view class="history-tags" wx:if="{{searchHistory.length > 0}}">
+          <text class="tags-title">高频搜索</text>
+          <view class="tags-list">
+            <text
+              class="tag-item"
+              wx:for="{{getFrequentSearches()}}"
+              wx:key="*this"
+            >{{item}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="history-modal-footer">
+        <button class="btn btn-primary" bindtap="onHistoryModalClose">确定</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 语音搜索弹窗 -->
+  <view class="voice-search-modal {{showVoiceModal ? 'show' : ''}}" bindtap="onVoiceModalClose">
+    <view class="voice-content" catchtap="onVoiceModalContentTap">
+      <view class="voice-header">
+        <text class="voice-title">语音搜索</text>
+        <text class="voice-close" bindtap="onVoiceModalClose">×</text>
+      </view>
+
+      <view class="voice-body">
+        <view class="voice-animation {{isRecording ? 'recording' : ''}}">
+          <view class="voice-wave">
+            <view class="wave-line" wx:for="{{[1,2,3,4,5,6,7]}}" wx:key="*this"></view>
+          </view>
+          <text class="voice-status">{{isRecording ? '正在录音...' : '点击开始'}}</text>
+        </view>
+
+        <text class="voice-result" wx:if="{{voiceResult}}">
+          识别结果：{{voiceResult}}
+        </text>
+
+        <view class="voice-controls">
+          <button
+            class="voice-btn {{isRecording ? 'recording' : ''}}"
+            bindtouchstart="onVoiceStart"
+            bindtouchend="onVoiceEnd"
+          >
+            <text class="voice-btn-icon">{{isRecording ? '■' : '🎤'}}</text>
+          </button>
+          <button class="voice-btn secondary" bindtap="onVoiceRetry" wx:if="{{voiceResult}}">
+            <text class="retry-icon">🔄</text>
+            重试
+          </button>
+        </view>
+
+        <view class="voice-tips">
+          <text class="tip-item">• 点击麦克风开始录音</text>
+          <text class="tip-item">• 说出技师姓名或服务类型</text>
+          <text class="tip-item">• 松开停止录音并识别</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部安全区域 -->
+  <view class="safe-area-bottom"></view>
+</view>

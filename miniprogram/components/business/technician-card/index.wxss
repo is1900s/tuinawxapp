@@ -1,0 +1,345 @@
+/* 技师卡片组件样式 */
+.technician-card {
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.technician-card:active {
+  transform: scale(0.98);
+}
+
+.technician-card.compact {
+  padding: 20rpx;
+  margin-bottom: 15rpx;
+}
+
+/* 技师头部信息 */
+.technician-header {
+  display: flex;
+  gap: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.technician-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  border: 3rpx solid #f2f2f7;
+}
+
+.compact .technician-avatar {
+  width: 80rpx;
+  height: 80rpx;
+}
+
+.technician-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.technician-name-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10rpx;
+}
+
+.technician-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.compact .technician-name {
+  font-size: 28rpx;
+}
+
+.technician-badges {
+  display: flex;
+  gap: 10rpx;
+  flex-shrink: 0;
+}
+
+.badge {
+  font-size: 20rpx;
+  padding: 6rpx 12rpx;
+  border-radius: 12rpx;
+  color: #fff;
+  font-weight: 500;
+}
+
+.badge-verified {
+  background-color: #007AFF;
+}
+
+.badge-experienced {
+  background-color: #FF9500;
+}
+
+.badge-top {
+  background-color: #FF3B30;
+}
+
+/* 技师元信息 */
+.technician-meta {
+  margin-bottom: 15rpx;
+}
+
+.rating-info {
+  display: flex;
+  align-items: center;
+  gap: 15rpx;
+  margin-bottom: 8rpx;
+}
+
+.rating-stars {
+  font-size: 24rpx;
+  color: #FF9500;
+  font-weight: 500;
+}
+
+.order-count,
+.response-time {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.location-info {
+  display: flex;
+  align-items: center;
+  gap: 15rpx;
+}
+
+.distance {
+  font-size: 24rpx;
+  color: #007AFF;
+  font-weight: 500;
+}
+
+.estimate-time {
+  font-size: 22rpx;
+  color: #999;
+}
+
+/* 技师标签 */
+.technician-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+}
+
+.technician-tags .tag {
+  font-size: 20rpx;
+  padding: 6rpx 12rpx;
+  background-color: #f2f2f7;
+  color: #666;
+  border-radius: 12rpx;
+}
+
+/* 服务项目预览 */
+.service-preview {
+  margin-bottom: 20rpx;
+}
+
+.service-title {
+  font-size: 24rpx;
+  color: #666;
+  margin-bottom: 10rpx;
+}
+
+.service-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10rpx;
+  align-items: center;
+}
+
+.service-item {
+  font-size: 22rpx;
+  color: #007AFF;
+  background-color: #f2f8ff;
+  padding: 8rpx 12rpx;
+  border-radius: 8rpx;
+}
+
+.service-more {
+  font-size: 22rpx;
+  color: #999;
+}
+
+/* 价格区间 */
+.price-range {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  margin-bottom: 20rpx;
+  padding: 15rpx;
+  background-color: #f8f8f8;
+  border-radius: 8rpx;
+}
+
+.price-label {
+  font-size: 24rpx;
+  color: #666;
+}
+
+.price-text {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #FF3B30;
+}
+
+.price-unit {
+  font-size: 22rpx;
+  color: #999;
+}
+
+/* 操作按钮 */
+.action-buttons {
+  display: flex;
+  gap: 15rpx;
+}
+
+.action-buttons .btn {
+  flex: 1;
+  padding: 20rpx;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+  text-align: center;
+  border: none;
+  outline: none;
+}
+
+.btn-outline {
+  background-color: #fff;
+  color: #007AFF;
+  border: 1rpx solid #007AFF;
+}
+
+.btn-primary {
+  background-color: #007AFF;
+  color: #fff;
+}
+
+/* 快速操作（紧凑模式） */
+.quick-actions {
+  display: flex;
+  justify-content: space-around;
+  border-top: 1rpx solid #f2f2f7;
+  padding-top: 15rpx;
+  margin-top: 15rpx;
+}
+
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5rpx;
+  padding: 10rpx;
+  min-width: 80rpx;
+}
+
+.action-icon {
+  font-size: 32rpx;
+}
+
+.action-text {
+  font-size: 20rpx;
+  color: #666;
+}
+
+/* 状态指示器 */
+.status-indicator {
+  position: absolute;
+  top: 20rpx;
+  right: 20rpx;
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 8rpx 12rpx;
+  border-radius: 12rpx;
+}
+
+.status-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+}
+
+.status-available {
+  background-color: #34C759;
+}
+
+.status-busy {
+  background-color: #FF9500;
+}
+
+.status-offline {
+  background-color: #8E8E93;
+}
+
+.status-text {
+  font-size: 20rpx;
+  color: #666;
+}
+
+/* 紧凑模式特殊样式 */
+.compact .technician-meta {
+  margin-bottom: 10rpx;
+}
+
+.compact .rating-info {
+  margin-bottom: 5rpx;
+}
+
+.compact .technician-tags {
+  margin-bottom: 0;
+}
+
+/* 响应式适配 */
+@media (max-width: 320px) {
+  .technician-header {
+    gap: 15rpx;
+  }
+
+  .technician-avatar {
+    width: 100rpx;
+    height: 100rpx;
+  }
+
+  .technician-name {
+    font-size: 28rpx;
+  }
+
+  .technician-badges {
+    flex-direction: column;
+    gap: 5rpx;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 10rpx;
+  }
+}
+
+/* 动画效果 */
+.technician-card {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

@@ -1,0 +1,381 @@
+<!-- 技师详情页 -->
+<scroll-view class="technician-detail-page" scroll-y="true" bindscrolltolower="onLoadMore">
+  <!-- 技师头部信息 -->
+  <view class="technician-header">
+    <!-- 背景图片 -->
+    <image class="header-bg" src="{{technicianInfo.backgroundImage || '/assets/images/default-bg.jpg'}}" mode="aspectFill" />
+
+    <!-- 技师基本信息 -->
+    <view class="technician-basic-info">
+      <view class="avatar-section">
+        <image class="technician-avatar" src="{{technicianInfo.avatar}}" mode="aspectFill" />
+        <view class="status-indicator status-{{technicianInfo.status}}" wx:if="{{technicianInfo.status}}">
+          <text class="status-text">{{getStatusText(technicianInfo.status)}}</text>
+        </view>
+      </view>
+
+      <view class="info-section">
+        <view class="name-row">
+          <text class="technician-name">{{technicianInfo.name}}</text>
+          <view class="technician-badges">
+            <text class="badge badge-verified" wx:if="{{technicianInfo.verified}}">已认证</text>
+            <text class="badge badge-experienced" wx:if="{{technicianInfo.experience >= 5}}">{{technicianInfo.experience}}年经验</text>
+            <text class="badge badge-top" wx:if="{{technicianInfo.isTop}}">金牌技师</text>
+          </view>
+        </view>
+
+        <view class="rating-row">
+          <view class="rating-info">
+            <text class="rating-stars">{{technicianInfo.rating}} ⭐</text>
+            <text class="rating-count">{{technicianInfo.commentCount || 0}}条评价</text>
+          </view>
+          <text class="order-count">服务{{technicianInfo.orderCount || 0}}次</text>
+        </view>
+
+        <view class="meta-row">
+          <text class="response-time">{{technicianInfo.responseTime || 15}}分钟响应</text>
+          <text class="completion-rate">{{technicianInfo.completionRate || 98}}%完成率</text>
+        </view>
+      </view>
+
+      <!-- 操作按钮 -->
+      <view class="action-buttons">
+        <view class="action-item" bindtap="onContact">
+          <text class="action-icon">📞</text>
+          <text class="action-text">联系</text>
+        </view>
+        <view class="action-item" bindtap="onFavorite">
+          <text class="action-icon">{{technicianInfo.isFavorite ? '❤️' : '🤍'}}</text>
+          <text class="action-text">{{technicianInfo.isFavorite ? '已收藏' : '收藏'}}</text>
+        </view>
+        <view class="action-item" bindtap="onShare">
+          <text class="action-icon">📤</text>
+          <text class="action-text">分享</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 服务项目 -->
+  <view class="service-section card">
+    <view class="section-header">
+      <text class="section-title">服务项目</text>
+      <text class="service-count">{{technicianInfo.services?.length || 0}}项</text>
+    </view>
+
+    <view class="service-list">
+      <view
+        class="service-item"
+        wx:for="{{technicianInfo.services}}"
+        wx:key="id"
+        bindtap="onServiceSelect"
+        data-service="{{item}}"
+      >
+        <view class="service-header">
+          <image class="service-icon" src="{{item.icon}}" mode="aspectFit" />
+          <view class="service-info">
+            <text class="service-name">{{item.name}}</text>
+            <text class="service-desc">{{item.description}}</text>
+          </view>
+          <view class="service-price">
+            <text class="price-current">¥{{item.price}}</text>
+            <text class="price-unit">/{{item.duration}}分钟</text>
+          </view>
+        </view>
+
+        <!-- 服务特色 -->
+        <view class="service-features" wx:if="{{item.features}}">
+          <text
+            class="feature-tag"
+            wx:for="{{item.features}}"
+            wx:for-item="feature"
+            wx:key="*this"
+          >{{feature}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 技师简介 -->
+  <view class="intro-section card" wx:if="{{technicianInfo.introduction}}">
+    <view class="section-header">
+      <text class="section-title">技师简介</text>
+    </view>
+    <text class="intro-text">{{technicianInfo.introduction}}</text>
+  </view>
+
+  <!-- 专业技能 -->
+  <view class="skills-section card" wx:if="{{technicianInfo.skills && technicianInfo.skills.length > 0}}">
+    <view class="section-header">
+      <text class="section-title">专业技能</text>
+    </view>
+
+    <view class="skills-grid">
+      <view
+        class="skill-item"
+        wx:for="{{technicianInfo.skills}}"
+        wx:key="name"
+      >
+        <view class="skill-icon">{{item.icon}}</view>
+        <text class="skill-name">{{item.name}}</text>
+        <view class="skill-level">
+          <view class="level-stars">
+            <text
+              class="star {{index < item.level ? 'filled' : ''}}"
+              wx:for="{{[1,2,3,4,5]}}"
+              wx:key="*this"
+            >★</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 工作经历 -->
+  <view class="experience-section card" wx:if="{{technicianInfo.experience && technicianInfo.experience.length > 0}}">
+    <view class="section-header">
+      <text class="section-title">工作经历</text>
+    </view>
+
+    <view class="experience-list">
+      <view
+        class="experience-item"
+        wx:for="{{technicianInfo.experience}}"
+        wx:key="id"
+      >
+        <view class="experience-period">
+          <text class="period-start">{{item.startDate}}</text>
+          <text class="period-separator">~</text>
+          <text class="period-end">{{item.endDate || '至今'}}</text>
+        </view>
+        <view class="experience-content">
+          <text class="experience-company">{{item.company}}</text>
+          <text class="experience-position">{{item.position}}</text>
+          <text class="experience-desc" wx:if="{{item.description}}">{{item.description}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 证书资质 -->
+  <view class="certificates-section card" wx:if="{{technicianInfo.certificates && technicianInfo.certificates.length > 0}}">
+    <view class="section-header">
+      <text class="section-title">证书资质</text>
+    </view>
+
+    <scroll-view class="certificates-scroll" scroll-x="true">
+      <view class="certificates-list">
+        <view
+          class="certificate-item"
+          wx:for="{{technicianInfo.certificates}}"
+          wx:key="id"
+          bindtap="onCertificateTap"
+          data-certificate="{{item}}"
+        >
+          <image class="certificate-image" src="{{item.image}}" mode="aspectFill" />
+          <text class="certificate-name">{{item.name}}</text>
+          <text class="certificate-issuer">{{item.issuer}}</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 用户评价 -->
+  <view class="reviews-section card">
+    <view class="section-header">
+      <text class="section-title">用户评价</text>
+      <view class="rating-summary">
+        <text class="summary-rating">{{technicianInfo.rating || 5.0}}</text>
+        <text class="summary-count">{{technicianInfo.commentCount || 0}}条评价</text>
+      </view>
+    </view>
+
+    <!-- 评分分布 -->
+    <view class="rating-distribution">
+      <view
+        class="rating-bar"
+        wx:for="{{[5,4,3,2,1]}}"
+        wx:key="*this"
+      >
+        <text class="rating-label">{{item}}星</text>
+        <view class="rating-progress">
+          <view
+            class="rating-fill"
+            style="width: {{getRatingPercentage(item)}}%"
+          ></view>
+        </view>
+        <text class="rating-count">{{getRatingCount(item)}}</text>
+      </view>
+    </view>
+
+    <!-- 评价标签 -->
+    <view class="review-tags" wx:if="{{reviewTags.length > 0}}">
+      <text
+        class="review-tag"
+        wx:for="{{reviewTags}}"
+        wx:key="*this"
+      >{{item}}</text>
+    </view>
+
+    <!-- 评价列表 -->
+    <view class="review-list">
+      <view
+        class="review-item"
+        wx:for="{{reviews}}"
+        wx:key="id"
+        bindtap="onReviewTap"
+        data-review="{{item}}"
+      >
+        <view class="review-header">
+          <image class="reviewer-avatar" src="{{item.userAvatar}}" mode="aspectFill" />
+          <view class="reviewer-info">
+            <text class="reviewer-name">{{item.userName}}</text>
+            <text class="review-date">{{item.date}}</text>
+          </view>
+          <view class="review-rating">
+            <text class="rating-stars">{{item.rating}} ⭐</text>
+          </view>
+        </view>
+
+        <text class="review-content">{{item.content}}</text>
+
+        <!-- 服务信息 -->
+        <view class="review-service" wx:if="{{item.serviceName}}">
+          <text class="service-label">服务项目：</text>
+          <text class="service-name">{{item.serviceName}}</text>
+        </view>
+
+        <!-- 评价图片 -->
+        <view class="review-images" wx:if="{{item.images && item.images.length > 0}}">
+          <image
+            class="review-image"
+            wx:for="{{item.images}}"
+            wx:for-item="image"
+            wx:key="*this"
+            src="{{image}}"
+            mode="aspectFill"
+            bindtap="onImagePreview"
+            data-urls="{{item.images}}"
+            data-current="{{image}}"
+          />
+        </view>
+
+        <!-- 标签 -->
+        <view class="review-tags-small" wx:if="{{item.tags && item.tags.length > 0}}">
+          <text
+            class="tag-small"
+            wx:for="{{item.tags}}"
+            wx:for-item="tag"
+            wx:key="*this"
+          >{{tag}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 加载更多 -->
+    <view class="load-more" wx:if="{{hasMoreReviews}}">
+      <text class="load-text">{{loadingReviews ? '加载中...' : '查看更多评价'}}</text>
+    </view>
+  </view>
+
+  <!-- 服务时间 -->
+  <view class="schedule-section card">
+    <view class="section-header">
+      <text class="section-title">服务时间</text>
+    </view>
+
+    <view class="schedule-grid">
+      <view
+        class="schedule-item"
+        wx:for="{{technicianInfo.schedule}}"
+        wx:key="day"
+      >
+        <text class="schedule-day">{{item.day}}</text>
+        <text class="schedule-time {{item.available ? 'available' : 'unavailable'}}">
+          {{item.available ? item.timeRange : '不可预约'}}
+        </text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 服务范围 -->
+  <view class="service-area-section card" wx:if="{{technicianInfo.serviceArea}}">
+    <view class="section-header">
+      <text class="section-title">服务范围</text>
+      <text class="area-distance">{{technicianInfo.serviceArea.maxDistance}}km内</text>
+    </view>
+
+    <view class="area-info">
+      <text class="area-desc">{{technicianInfo.serviceArea.description}}</text>
+      <view class="area-districts" wx:if="{{technicianInfo.serviceArea.districts}}">
+        <text
+          class="district-tag"
+          wx:for="{{technicianInfo.serviceArea.districts}}"
+          wx:key="*this"
+        >{{item}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部预约栏 -->
+  <view class="bottom-bar">
+    <view class="price-info">
+      <text class="price-label">参考价格</text>
+      <text class="price-range">¥{{technicianInfo.minPrice}}-¥{{technicianInfo.maxPrice}}</text>
+    </view>
+    <button class="btn-book" bindtap="onBookNow">
+      立即预约
+    </button>
+  </view>
+
+  <!-- 地图模式入口 -->
+  <view class="map-toggle" bindtap="onShowMap">
+    <text class="toggle-icon">🗺️</text>
+    <text class="toggle-text">查看位置</text>
+  </view>
+</view>
+
+<!-- 图片预览 -->
+<view class="image-preview-modal {{showImagePreview ? 'show' : ''}}" bindtap="onImagePreviewClose">
+  <view class="preview-content" catchtap="onImagePreviewContentTap">
+    <swiper
+      class="preview-swiper"
+      indicator-dots="{{previewImages.length > 1}}"
+      current="{{previewIndex}}"
+      bindchange="onPreviewChange"
+    >
+      <swiper-item wx:for="{{previewImages}}" wx:key="*this">
+        <image class="preview-image" src="{{item}}" mode="aspectFit" />
+      </swiper-item>
+    </swiper>
+    <text class="preview-close" bindtap="onImagePreviewClose">×</text>
+  </view>
+</view>
+
+<!-- 联系弹窗 -->
+<view class="contact-modal {{showContactModal ? 'show' : ''}}" bindtap="onContactModalClose">
+  <view class="contact-content" catchtap="onContactModalContentTap">
+    <view class="contact-header">
+      <text class="contact-title">联系技师</text>
+      <text class="contact-close" bindtap="onContactModalClose">×</text>
+    </view>
+
+    <view class="contact-options">
+      <view class="contact-option" bindtap="onPhoneCall">
+        <text class="contact-icon">📞</text>
+        <text class="contact-text">电话联系</text>
+      </view>
+      <view class="contact-option" bindtap="onSendMessage">
+        <text class="contact-icon">💬</text>
+        <text class="contact-text">发送消息</text>
+      </view>
+      <view class="contact-option" bindtap="onWechatContact">
+        <text class="contact-icon">📱</text>
+        <text class="contact-text">微信联系</text>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 安全区域适配 -->
+<view class="safe-area-bottom"></view>

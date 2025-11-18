@@ -1,0 +1,203 @@
+<!-- 服务选择组件 -->
+<view class="service-selector">
+  <!-- 组件标题 -->
+  <view class="selector-header" wx:if="{{showHeader}}">
+    <text class="selector-title">{{title}}</text>
+    <text class="selector-subtitle" wx:if="{{subtitle}}">{{subtitle}}</text>
+  </view>
+
+  <!-- 服务分类标签 -->
+  <view class="category-tabs" wx:if="{{categories.length > 0}}">
+    <scroll-view class="category-scroll" scroll-x="true">
+      <view class="category-list">
+        <text
+          class="category-item {{selectedCategory === '' ? 'active' : ''}}"
+          bindtap="onCategoryChange"
+          data-category=""
+        >全部</text>
+        <text
+          class="category-item {{selectedCategory === item.id ? 'active' : ''}}"
+          wx:for="{{categories}}"
+          wx:key="id"
+          bindtap="onCategoryChange"
+          data-category="{{item.id}}"
+        >{{item.name}}</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 服务列表 -->
+  <scroll-view class="service-scroll" scroll-y="true" style="height: {{scrollHeight}}">
+    <view class="service-list">
+      <!-- 服务项目卡片 -->
+      <view
+        class="service-item {{selectedService.id === item.id ? 'selected' : ''}}"
+        wx:for="{{filteredServices}}"
+        wx:key="id"
+        bindtap="onServiceSelect"
+        data-service="{{item}}"
+      >
+        <!-- 服务图标和基本信息 -->
+        <view class="service-header">
+          <image class="service-icon" src="{{item.icon}}" mode="aspectFit" />
+          <view class="service-info">
+            <view class="service-name-row">
+              <text class="service-name">{{item.name}}</text>
+              <view class="service-badges">
+                <text class="badge badge-popular" wx:if="{{item.isPopular}}">热门</text>
+                <text class="badge badge-recommended" wx:if="{{item.isRecommended}}">推荐</text>
+              </view>
+            </view>
+            <text class="service-desc">{{item.description}}</text>
+          </view>
+        </view>
+
+        <!-- 服务详情 -->
+        <view class="service-details">
+          <!-- 时间和价格 -->
+          <view class="service-meta">
+            <view class="time-info">
+              <text class="time-label">时长：</text>
+              <text class="time-value">{{item.duration}}分钟</text>
+            </view>
+            <view class="price-info">
+              <text class="price-current">¥{{item.price}}</text>
+              <text class="price-original" wx:if="{{item.originalPrice && item.originalPrice > item.price}}">¥{{item.originalPrice}}</text>
+            </view>
+          </view>
+
+          <!-- 技师要求 -->
+          <view class="technician-requirement" wx:if="{{item.technicianRequirement}}">
+            <text class="requirement-label">技师要求：</text>
+            <text class="requirement-text">{{item.technicianRequirement}}</text>
+          </view>
+
+          <!-- 适用人群 -->
+          <view class="suitable-people" wx:if="{{item.suitablePeople}}">
+            <text class="suitable-label">适用：</text>
+            <text class="suitable-text">{{item.suitablePeople}}</text>
+          </view>
+
+          <!-- 服务效果 -->
+          <view class="service-effects" wx:if="{{item.effects && item.effects.length > 0}}">
+            <text class="effects-label">效果：</text>
+            <view class="effects-list">
+              <text
+                class="effect-item"
+                wx:for="{{item.effects}}"
+                wx:for-item="effect"
+                wx:key="*this"
+              >{{effect}}</text>
+            </view>
+          </view>
+        </view>
+
+        <!-- 选择指示器 -->
+        <view class="select-indicator" wx:if="{{selectedService.id === item.id}}">
+          <text class="indicator-icon">✓</text>
+        </view>
+      </view>
+
+      <!-- 空状态 -->
+      <view class="empty-state" wx:if="{{filteredServices.length === 0}}">
+        <text class="empty-icon">🔍</text>
+        <text class="empty-title">暂无相关服务</text>
+        <text class="empty-desc">请尝试选择其他分类</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 选中服务信息展示 -->
+  <view class="selected-service-info" wx:if="{{selectedService.id && showSelectedInfo}}">
+    <view class="selected-header">
+      <text class="selected-title">已选择服务</text>
+      <text class="selected-change" bindtap="onClearSelection">重新选择</text>
+    </view>
+    <view class="selected-details">
+      <text class="selected-name">{{selectedService.name}}</text>
+      <view class="selected-meta">
+        <text class="selected-duration">{{selectedService.duration}}分钟</text>
+        <text class="selected-price">¥{{selectedService.price}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-buttons" wx:if="{{showActions}}">
+    <button class="btn btn-outline" bindtap="onCancel" wx:if="{{showCancel}}">取消</button>
+    <button
+      class="btn btn-primary"
+      bindtap="onConfirm"
+      disabled="{{!selectedService.id}}"
+    >确认选择</button>
+  </view>
+</view>
+
+<!-- 服务详情弹窗 -->
+<view class="service-detail-modal {{showDetailModal ? 'show' : ''}}" bindtap="onDetailModalClose">
+  <view class="detail-content" catchtap="onDetailModalContentTap">
+    <view class="detail-header">
+      <text class="detail-title">服务详情</text>
+      <text class="detail-close" bindtap="onDetailModalClose">×</text>
+    </view>
+
+    <scroll-view class="detail-scroll" scroll-y="true" wx:if="{{detailService}}">
+      <!-- 服务图片 -->
+      <image class="detail-image" src="{{detailService.image}}" mode="aspectFill" wx:if="{{detailService.image}}" />
+
+      <!-- 服务信息 -->
+      <view class="detail-info">
+        <text class="detail-name">{{detailService.name}}</text>
+        <text class="detail-desc">{{detailService.description}}</text>
+
+        <!-- 服务特色 -->
+        <view class="detail-features" wx:if="{{detailService.features}}">
+          <text class="features-title">服务特色</text>
+          <view class="features-list">
+            <text
+              class="feature-item"
+              wx:for="{{detailService.features}}"
+              wx:key="*this"
+            >{{item}}</text>
+          </view>
+        </view>
+
+        <!-- 注意事项 -->
+        <view class="detail-notices" wx:if="{{detailService.notices}}">
+          <text class="notices-title">注意事项</text>
+          <view class="notices-list">
+            <text
+              class="notice-item"
+              wx:for="{{detailService.notices}}"
+              wx:key="*this"
+            >{{index + 1}}. {{item}}</text>
+          </view>
+        </view>
+
+        <!-- 服务流程 -->
+        <view class="detail-process" wx:if="{{detailService.process}}">
+          <text class="process-title">服务流程</text>
+          <view class="process-steps">
+            <view
+              class="process-step"
+              wx:for="{{detailService.process}}"
+              wx:key="*this"
+            >
+              <text class="step-number">{{index + 1}}</text>
+              <text class="step-text">{{item}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <view class="detail-footer">
+      <button class="btn btn-outline" bindtap="onDetailModalClose">关闭</button>
+      <button
+        class="btn btn-primary"
+        bindtap="onSelectFromDetail"
+        data-service="{{detailService}}"
+      >选择此服务</button>
+    </view>
+  </view>
+</view>

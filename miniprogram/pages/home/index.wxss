@@ -1,0 +1,352 @@
+/* 首页样式 */
+.home-page {
+  background-color: #f8f8f8;
+  min-height: 100vh;
+}
+
+/* 搜索栏 */
+.search-bar {
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+  background-color: #fff;
+  gap: 20rpx;
+}
+
+.search-input {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  background-color: #f2f2f7;
+  border-radius: 25rpx;
+  padding: 20rpx 30rpx;
+  gap: 20rpx;
+}
+
+.search-icon {
+  font-size: 32rpx;
+  color: #999;
+}
+
+.search-placeholder {
+  font-size: 28rpx;
+  color: #999;
+}
+
+.location-btn {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  padding: 15rpx 20rpx;
+  background-color: #007AFF;
+  border-radius: 25rpx;
+}
+
+.location-icon {
+  font-size: 28rpx;
+  color: #fff;
+}
+
+.location-text {
+  font-size: 24rpx;
+  color: #fff;
+}
+
+/* 区域标题 */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx 20rpx 20rpx;
+  background-color: #f8f8f8;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.section-more {
+  font-size: 26rpx;
+  color: #007AFF;
+}
+
+/* 服务分类 */
+.service-categories {
+  background-color: #fff;
+  margin-bottom: 20rpx;
+}
+
+.category-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 30rpx;
+  padding: 20rpx;
+}
+
+.category-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15rpx;
+}
+
+.category-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+  background-color: #f2f2f7;
+}
+
+.category-name {
+  font-size: 24rpx;
+  color: #333;
+  text-align: center;
+}
+
+/* 推荐技师 */
+.recommended-technicians {
+  background-color: #fff;
+  margin-bottom: 20rpx;
+}
+
+.technician-list {
+  white-space: nowrap;
+  padding: 20rpx;
+  gap: 20rpx;
+}
+
+.technician-item {
+  display: inline-block;
+  width: 300rpx;
+  background-color: #f8f8f8;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  margin-right: 20rpx;
+  vertical-align: top;
+  white-space: normal;
+}
+
+.technician-avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  margin-bottom: 20rpx;
+}
+
+.technician-info {
+  margin-bottom: 15rpx;
+}
+
+.technician-name {
+  display: block;
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.technician-rating {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+  margin-bottom: 8rpx;
+}
+
+.rating-stars {
+  font-size: 24rpx;
+  color: #FF9500;
+}
+
+.rating-count {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.technician-distance {
+  display: block;
+  font-size: 24rpx;
+  color: #666;
+}
+
+.technician-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+}
+
+.technician-tags .tag {
+  font-size: 20rpx;
+  padding: 6rpx 12rpx;
+}
+
+/* 特惠活动 */
+.special-offers {
+  background-color: #fff;
+  margin-bottom: 20rpx;
+}
+
+.offer-swiper {
+  height: 200rpx;
+  padding: 20rpx;
+}
+
+.offer-item {
+  display: flex;
+  background-color: #f8f8f8;
+  border-radius: 16rpx;
+  overflow: hidden;
+  height: 160rpx;
+}
+
+.offer-image {
+  width: 160rpx;
+  height: 160rpx;
+}
+
+.offer-info {
+  flex: 1;
+  padding: 20rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.offer-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.offer-desc {
+  font-size: 24rpx;
+  color: #666;
+  margin-bottom: 8rpx;
+}
+
+.offer-price {
+  display: flex;
+  align-items: center;
+  gap: 15rpx;
+}
+
+.price-current {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #FF3B30;
+}
+
+.price-original {
+  font-size: 24rpx;
+  color: #999;
+  text-decoration: line-through;
+}
+
+/* 用户评价 */
+.user-reviews {
+  background-color: #fff;
+}
+
+.review-list {
+  padding: 0 20rpx 20rpx;
+}
+
+.review-item {
+  border-bottom: 1rpx solid #f2f2f7;
+  padding: 30rpx 0;
+}
+
+.review-item:last-child {
+  border-bottom: none;
+}
+
+.review-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15rpx;
+  gap: 15rpx;
+}
+
+.reviewer-avatar {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+}
+
+.reviewer-info {
+  flex: 1;
+}
+
+.reviewer-name {
+  display: block;
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5rpx;
+}
+
+.review-date {
+  font-size: 22rpx;
+  color: #999;
+}
+
+.review-rating {
+  text-align: right;
+}
+
+.review-content {
+  font-size: 26rpx;
+  color: #333;
+  line-height: 1.6;
+  margin-bottom: 15rpx;
+}
+
+.review-service {
+  background-color: #f8f8f8;
+  padding: 15rpx;
+  border-radius: 8rpx;
+}
+
+.service-name {
+  font-size: 24rpx;
+  color: #666;
+}
+
+/* 自定义导航栏 */
+.custom-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 88rpx;
+  background-color: #fff;
+  z-index: 1000;
+}
+
+.navbar-content {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: constant(safe-area-inset-top);
+  padding-top: env(safe-area-inset-top);
+}
+
+.navbar-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 响应式适配 */
+@media (max-width: 320px) {
+  .category-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .technician-item {
+    width: 280rpx;
+  }
+}

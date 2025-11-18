@@ -1,0 +1,20 @@
+{
+  "name": "user-service",
+  "version": "1.0.0",
+  "description": "用户认证和管理服务",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~2.6.3",
+    "jsonwebtoken": "^9.0.0",
+    "bcryptjs": "^2.4.3",
+    "crypto": "^1.0.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.25.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT"
+}

@@ -1,0 +1,96 @@
+<!-- 技师卡片组件 -->
+<view class="technician-card {{compact ? 'compact' : ''}}" bindtap="onCardTap" data-technician="{{technician}}">
+  <!-- 技师头像和基本信息 -->
+  <view class="technician-header">
+    <image class="technician-avatar" src="{{technician.avatar}}" mode="aspectFill" />
+    <view class="technician-info">
+      <!-- 姓名和徽章 -->
+      <view class="technician-name-row">
+        <text class="technician-name">{{technician.name}}</text>
+        <view class="technician-badges">
+          <text class="badge badge-verified" wx:if="{{technician.verified}}">已认证</text>
+          <text class="badge badge-experienced" wx:if="{{technician.experience >= 5}}">{{technician.experience}}年经验</text>
+          <text class="badge badge-top" wx:if="{{technician.isTop}}">金牌技师</text>
+        </view>
+      </view>
+
+      <!-- 评分和订单信息 -->
+      <view class="technician-meta">
+        <view class="rating-info">
+          <text class="rating-stars">{{technician.rating}} ⭐</text>
+          <text class="order-count">{{technician.orderCount}}单</text>
+          <text class="response-time">{{technician.responseTime}}分钟响应</text>
+        </view>
+
+        <!-- 距离和预计到达时间 -->
+        <view class="location-info" wx:if="{{technician.distance}}">
+          <text class="distance">{{technician.distance}}km</text>
+          <text class="estimate-time">{{technician.estimateTime}}分钟</text>
+        </view>
+      </view>
+
+      <!-- 技师标签 -->
+      <view class="technician-tags" wx:if="{{technician.tags && technician.tags.length > 0}}">
+        <text
+          class="tag"
+          wx:for="{{technician.tags}}"
+          wx:for-item="tag"
+          wx:key="*this"
+        >{{tag}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 服务项目预览 -->
+  <view class="service-preview" wx:if="{{technician.services && technician.services.length > 0 && !compact}}">
+    <text class="service-title">服务项目：</text>
+    <view class="service-list">
+      <text
+        class="service-item"
+        wx:for="{{technician.services.slice(0, 3)}}"
+        wx:for-item="service"
+        wx:key="id"
+      >{{service.name}}</text>
+      <text class="service-more" wx:if="{{technician.services.length > 3}}">+{{technician.services.length - 3}}项</text>
+    </view>
+  </view>
+
+  <!-- 价格区间 -->
+  <view class="price-range" wx:if="{{technician.minPrice && technician.maxPrice && !compact}}">
+    <text class="price-label">价格：</text>
+    <text class="price-text">¥{{technician.minPrice}}-¥{{technician.maxPrice}}</text>
+    <text class="price-unit">/次</text>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-buttons" wx:if="{{showActions && !compact}}">
+    <button class="btn btn-outline" bindtap="onViewDetail" data-technician="{{technician}}">
+      查看详情
+    </button>
+    <button class="btn btn-primary" bindtap="onBookNow" data-technician="{{technician}}">
+      立即预约
+    </button>
+  </view>
+
+  <!-- 快速操作（紧凑模式） -->
+  <view class="quick-actions" wx:if="{{showQuickActions && compact}}">
+    <view class="action-item" bindtap="onQuickCall" data-technician="{{technician}}">
+      <text class="action-icon">📞</text>
+      <text class="action-text">联系</text>
+    </view>
+    <view class="action-item" bindtap="onQuickBook" data-technician="{{technician}}">
+      <text class="action-icon">📅</text>
+      <text class="action-text">预约</text>
+    </view>
+    <view class="action-item" bindtap="onQuickFavorite" data-technician="{{technician}}">
+      <text class="action-icon">{{technician.isFavorite ? '❤️' : '🤍'}}</text>
+      <text class="action-text">{{technician.isFavorite ? '已收藏' : '收藏'}}</text>
+    </view>
+  </view>
+
+  <!-- 状态指示器 -->
+  <view class="status-indicator" wx:if="{{technician.status}}">
+    <text class="status-dot status-{{technician.status}}"></text>
+    <text class="status-text">{{technician.statusText}}</text>
+  </view>
+</view>

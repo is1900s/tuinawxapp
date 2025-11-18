@@ -1,0 +1,385 @@
+<!-- 订单详情页 -->
+<scroll-view class="order-detail-page" scroll-y="true">
+  <!-- 订单状态卡片 -->
+  <view class="status-card">
+    <!-- 状态图标和文本 -->
+    <view class="status-header">
+      <view class="status-icon-wrapper status-{{orderInfo.status}}">
+        <text class="status-icon">{{getStatusIcon(orderInfo.status)}}</text>
+      </view>
+      <view class="status-info">
+        <text class="status-title">{{getStatusTitle(orderInfo.status)}}</text>
+        <text class="status-desc">{{getStatusDesc(orderInfo.status)}}</text>
+      </view>
+    </view>
+
+    <!-- 订单进度 -->
+    <view class="order-timeline" wx:if="{{orderInfo.timeline}}">
+      <view
+        class="timeline-item {{item.completed ? 'completed' : ''}} {{item.current ? 'current' : ''}}"
+        wx:for="{{orderInfo.timeline}}"
+        wx:key="time"
+      >
+        <view class="timeline-dot">
+          <text class="dot-icon">{{item.completed ? '✓' : '○'}}</text>
+        </view>
+        <view class="timeline-content">
+          <text class="timeline-title">{{item.title}}</text>
+          <text class="timeline-time">{{item.time}}</text>
+        </view>
+        <view class="timeline-line" wx:if="{{!$last}}"></view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 服务信息 -->
+  <view class="service-section card">
+    <view class="section-header">
+      <text class="section-title">服务信息</text>
+    </view>
+
+    <view class="service-content">
+      <view class="service-header">
+        <image class="service-image" src="{{orderInfo.service?.icon}}" mode="aspectFill" />
+        <view class="service-info">
+          <text class="service-name">{{orderInfo.service?.name}}</text>
+          <text class="service-desc">{{orderInfo.service?.description}}</text>
+          <view class="service-meta">
+            <text class="service-duration">{{orderInfo.service?.duration}}分钟</text>
+            <text class="service-price">¥{{orderInfo.basePrice}}</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 预约详情 -->
+      <view class="appointment-details">
+        <view class="detail-item">
+          <text class="detail-label">预约时间</text>
+          <text class="detail-value">{{orderInfo.appointmentTime}}</text>
+        </view>
+        <view class="detail-item" wx:if="{{orderInfo.actualStartTime}}">
+          <text class="detail-label">开始时间</text>
+          <text class="detail-value">{{orderInfo.actualStartTime}}</text>
+        </view>
+        <view class="detail-item" wx:if="{{orderInfo.actualEndTime}}">
+          <text class="detail-label">结束时间</text>
+          <text class="detail-value">{{orderInfo.actualEndTime}}</text>
+        </view>
+        <view class="detail-item" wx:if="{{orderInfo.actualDuration}}">
+          <text class="detail-label">服务时长</text>
+          <text class="detail-value">{{orderInfo.actualDuration}}分钟</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 技师信息 -->
+  <view class="technician-section card">
+    <view class="section-header">
+      <text class="section-title">技师信息</text>
+      <text class="section-more" bindtap="onTechnicianTap" data-technician="{{orderInfo.technician}}">查看详情 ></text>
+    </view>
+
+    <view class="technician-content">
+      <view class="technician-header">
+        <image class="technician-avatar" src="{{orderInfo.technician?.avatar}}" mode="aspectFill" />
+        <view class="technician-info">
+          <text class="technician-name">{{orderInfo.technician?.name}}</text>
+          <view class="technician-meta">
+            <text class="technician-rating">{{orderInfo.technician?.rating}} ⭐</text>
+            <text class="technician-orders">{{orderInfo.technician?.orderCount}}单</text>
+            <text class="technician-badge" wx:if="{{orderInfo.technician?.verified}}">已认证</text>
+          </view>
+        </view>
+        <view class="technician-actions">
+          <button class="action-btn" bindtap="onContactTechnician" data-technician="{{orderInfo.technician}}">
+            联系技师
+          </button>
+        </view>
+      </view>
+
+      <!-- 技师技能 -->
+      <view class="technician-skills" wx:if="{{orderInfo.technician?.skills}}">
+        <text
+          class="skill-tag"
+          wx:for="{{orderInfo.technician.skills}}"
+          wx:key="name"
+        >{{item.name}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 服务地址 -->
+  <view class="address-section card">
+    <view class="section-header">
+      <text class="section-title">服务地址</text>
+      <text class="section-more" bindtap="onAddressTap" data-address="{{orderInfo.address}}">查看地图 ></text>
+    </view>
+
+    <view class="address-content">
+      <view class="address-header">
+        <text class="address-icon">📍</text>
+        <view class="address-info">
+          <text class="address-name">{{orderInfo.address?.name}}</text>
+          <text class="address-phone">{{orderInfo.address?.phone}}</text>
+        </view>
+      </view>
+      <text class="address-detail">{{orderInfo.address?.fullAddress}}</text>
+      <text class="address-note" wx:if="{{orderInfo.address?.note}}">
+        备注：{{orderInfo.address.note}}
+      </text>
+    </view>
+  </view>
+
+  <!-- 费用明细 -->
+  <view class="price-section card">
+    <view class="section-header">
+      <text class="section-title">费用明细</text>
+    </view>
+
+    <view class="price-details">
+      <view class="price-item">
+        <text class="price-label">服务费用</text>
+        <text class="price-value">¥{{orderInfo.basePrice}}</text>
+      </view>
+      <view class="price-item" wx:if="{{orderInfo.urgentFee > 0}}">
+        <text class="price-label">紧急服务费</text>
+        <text class="price-value">¥{{orderInfo.urgentFee}}</text>
+      </view>
+      <view class="price-item" wx:if="{{orderInfo.distanceFee > 0}}">
+        <text class="price-label">远程服务费</text>
+        <text class="price-value">¥{{orderInfo.distanceFee}}</text>
+      </view>
+      <view class="price-item discount" wx:if="{{orderInfo.couponDiscount > 0}}">
+        <text class="price-label">优惠券抵扣</text>
+        <text class="price-value">-¥{{orderInfo.couponDiscount}}</text>
+      </view>
+      <view class="price-divider"></view>
+      <view class="price-item total">
+        <text class="price-label">实付金额</text>
+        <text class="price-value">¥{{orderInfo.totalPrice}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 订单信息 -->
+  <view class="order-info-section card">
+    <view class="section-header">
+      <text class="section-title">订单信息</text>
+    </view>
+
+    <view class="order-info-details">
+      <view class="info-item">
+        <text class="info-label">订单编号</text>
+        <view class="info-value">
+          <text class="order-no">{{orderInfo.orderNo}}</text>
+          <text class="copy-btn" bindtap="onCopyOrderNo">复制</text>
+        </view>
+      </view>
+      <view class="info-item">
+        <text class="info-label">下单时间</text>
+        <text class="info-value">{{orderInfo.createdAt}}</text>
+      </view>
+      <view class="info-item">
+        <text class="info-label">支付方式</text>
+        <text class="info-value">{{getPaymentMethod(orderInfo.paymentMethod)}}</text>
+      </view>
+      <view class="info-item" wx:if="{{orderInfo.paidAt}}">
+        <text class="info-label">支付时间</text>
+        <text class="info-value">{{orderInfo.paidAt}}</text>
+      </view>
+      <view class="info-item" wx:if="{{orderInfo.note}}">
+        <text class="info-label">订单备注</text>
+        <text class="info-value">{{orderInfo.note}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 服务照片 -->
+  <view class="photos-section card" wx:if="{{orderInfo.servicePhotos && orderInfo.servicePhotos.length > 0}}">
+    <view class="section-header">
+      <text class="section-title">服务照片</text>
+    </view>
+
+    <view class="photos-grid">
+      <image
+        class="photo-item"
+        wx:for="{{orderInfo.servicePhotos}}"
+        wx:key="*this"
+        src="{{item}}"
+        mode="aspectFill"
+        bindtap="onPhotoPreview"
+        data-urls="{{orderInfo.servicePhotos}}"
+        data-current="{{item}}"
+      />
+    </view>
+  </view>
+
+  <!-- 技师备注 -->
+  <view class="technician-note-section card" wx:if="{{orderInfo.technicianNote}}">
+    <view class="section-header">
+      <text class="section-title">技师备注</text>
+    </view>
+    <text class="technician-note-text">{{orderInfo.technicianNote}}</text>
+  </view>
+
+  <!-- 用户评价 -->
+  <view class="review-section card" wx:if="{{orderInfo.review}}">
+    <view class="section-header">
+      <text class="section-title">我的评价</text>
+      <text class="section-more" bindtap="onEditReview" wx:if="{{canEditReview}}">修改 ></text>
+    </view>
+
+    <view class="review-content">
+      <view class="review-header">
+        <view class="review-rating">
+          <text class="rating-stars">{{orderInfo.review.rating}} ⭐</text>
+          <text class="review-date">{{orderInfo.review.createdAt}}</text>
+        </view>
+      </view>
+
+      <text class="review-content-text">{{orderInfo.review.content}}</text>
+
+      <view class="review-tags" wx:if="{{orderInfo.review.tags}}">
+        <text
+          class="review-tag"
+          wx:for="{{orderInfo.review.tags}}"
+          wx:key="*this"
+        >{{item}}</text>
+      </view>
+
+      <view class="review-images" wx:if="{{orderInfo.review.images}}">
+        <image
+          class="review-image"
+          wx:for="{{orderInfo.review.images}}"
+          wx:for-item="image"
+          wx:key="*this"
+          src="{{image}}"
+          mode="aspectFill"
+          bindtap="onReviewImagePreview"
+          data-urls="{{orderInfo.review.images}}"
+          data-current="{{image}}"
+        />
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部操作栏 -->
+  <view class="bottom-actions" wx:if="{{bottomActions.length > 0}}">
+    <button
+      class="action-btn {{item.style}}"
+      wx:for="{{bottomActions}}"
+      wx:key="text"
+      bindtap="onBottomActionTap"
+      data-action="{{item}}"
+    >
+      {{item.text}}
+    </button>
+  </view>
+
+  <!-- 底部间距 -->
+  <view class="bottom-spacer"></view>
+</scroll-view>
+
+<!-- 图片预览 -->
+<view class="image-preview-modal {{showImagePreview ? 'show' : ''}}" bindtap="onImagePreviewClose">
+  <view class="preview-content" catchtap="onImagePreviewContentTap">
+    <swiper
+      class="preview-swiper"
+      indicator-dots="{{previewImages.length > 1}}"
+      current="{{previewIndex}}"
+      bindchange="onPreviewChange"
+    >
+      <swiper-item wx:for="{{previewImages}}" wx:key="*this">
+        <image class="preview-image" src="{{item}}" mode="aspectFit" />
+      </swiper-item>
+    </swiper>
+    <text class="preview-close" bindtap="onImagePreviewClose">×</text>
+  </view>
+</view>
+
+<!-- 联系技师弹窗 -->
+<view class="contact-modal {{showContactModal ? 'show' : ''}}" bindtap="onContactModalClose">
+  <view class="contact-content" catchtap="onContactModalContentTap">
+    <view class="contact-header">
+      <text class="contact-title">联系技师</text>
+      <text class="contact-close" bindtap="onContactModalClose">×</text>
+    </view>
+
+    <view class="contact-options">
+      <view class="contact-option" bindtap="onPhoneCall">
+        <text class="contact-icon">📞</text>
+        <text class="contact-text">电话联系</text>
+      </view>
+      <view class="contact-option" bindtap="onSendMessage">
+        <text class="contact-icon">💬</text>
+        <text class="contact-text">发送消息</text>
+      </view>
+      <view class="contact-option" bindtap="onWechatContact">
+        <text class="contact-icon">📱</text>
+        <text class="contact-text">微信联系</text>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 修改评价弹窗 -->
+<view class="edit-review-modal {{showEditReviewModal ? 'show' : ''}}" bindtap="onEditReviewModalClose">
+  <view class="edit-review-content" catchtap="onEditReviewModalContentTap">
+    <view class="edit-review-header">
+      <text class="edit-review-title">修改评价</text>
+      <text class="edit-review-close" bindtap="onEditReviewModalClose">×</text>
+    </view>
+
+    <view class="edit-review-body">
+      <!-- 评分 -->
+      <view class="rating-section">
+        <text class="rating-label">服务评分</text>
+        <view class="rating-stars">
+          <text
+            class="star {{index < editReviewForm.rating ? 'filled' : ''}}"
+            wx:for="{{[1,2,3,4,5]}}"
+            wx:key="*this"
+            bindtap="onRatingTap"
+            data-rating="{{index + 1}}"
+          >★</text>
+        </view>
+      </view>
+
+      <!-- 评价内容 -->
+      <view class="content-section">
+        <text class="content-label">评价内容</text>
+        <textarea
+          class="content-textarea"
+          placeholder="请输入您的评价..."
+          value="{{editReviewForm.content}}"
+          bindinput="onContentInput"
+          maxlength="500"
+        />
+        <text class="content-count">{{editReviewForm.content.length}}/500</text>
+      </view>
+
+      <!-- 标签 -->
+      <view class="tags-section">
+        <text class="tags-label">快速标签</text>
+        <view class="tags-list">
+          <text
+            class="tag-item {{editReviewForm.tags.includes(item) ? 'selected' : ''}}"
+            wx:for="{{reviewTags}}"
+            wx:key="*this"
+            bindtap="onTagTap"
+            data-tag="{{item}}"
+          >{{item}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="edit-review-footer">
+      <button class="btn btn-outline" bindtap="onEditReviewModalClose">取消</button>
+      <button class="btn btn-primary" bindtap="onSubmitEditReview">保存修改</button>
+    </view>
+  </view>
+</view>
+
+<!-- 安全区域适配 -->
+<view class="safe-area-bottom"></view>

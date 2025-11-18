@@ -1,0 +1,179 @@
+{
+  "project": {
+    "name": "同城上门推拿预约微信小程序",
+    "path": "/home/fang/source/tuinawxapp",
+    "type": "微信小程序",
+    "description": "为同城用户提供便捷的上门推拿预约服务"
+  },
+  "scanInfo": {
+    "timestamp": "2025-11-18T19:00:15+08:00",
+    "totalFiles": 1,
+    "scannedFiles": 1,
+    "coverage": 100,
+    "truncated": false
+  },
+  "modules": [
+    {
+      "name": "根模块",
+      "path": ".",
+      "type": "project-root",
+      "description": "项目根目录，包含全局配置和文档",
+      "entryFiles": [
+        "CLAUDE.md",
+        "app.json",
+        "app.js"
+      ],
+      "configFiles": [
+        "project.config.json",
+        "package.json",
+        ".gitignore"
+      ],
+      "docFiles": [
+        "CLAUDE.md",
+        "README.md"
+      ],
+      "testCoverage": "待实现",
+      "status": "initialized"
+    }
+  ],
+  "architecture": {
+    "frontend": {
+      "framework": "微信小程序原生",
+      "language": "TypeScript",
+      "styling": "Less/SCSS"
+    },
+    "backend": {
+      "framework": "微信云开发",
+      "runtime": "Node.js",
+      "database": "MongoDB"
+    }
+  },
+  "coverage": {
+    "overview": {
+      "totalFiles": 1,
+      "scannedFiles": 1,
+      "coveragePercent": 100,
+      "ignoredFiles": 0,
+      "tooLargeFiles": 0
+    },
+    "byModule": {
+      "根模块": {
+        "plannedFiles": 8,
+        "existingFiles": 1,
+        "coveragePercent": 12.5,
+        "gaps": [
+          "app.json - 小程序配置文件",
+          "app.js - 小程序入口文件",
+          "project.config.json - 项目配置",
+          "package.json - 依赖管理",
+          ".gitignore - Git忽略规则",
+          "README.md - 项目说明",
+          "tsconfig.json - TypeScript配置"
+        ]
+      }
+    },
+    "gaps": [
+      {
+        "module": "miniprogram",
+        "type": "missing_directory",
+        "description": "小程序前端代码目录未创建",
+        "priority": "high"
+      },
+      {
+        "module": "cloudfunctions",
+        "type": "missing_directory",
+        "description": "云函数后端代码目录未创建",
+        "priority": "high"
+      },
+      {
+        "module": "docs",
+        "type": "missing_directory",
+        "description": "项目文档目录未创建",
+        "priority": "medium"
+      }
+    ]
+  },
+  "recommendations": {
+    "nextSteps": [
+      {
+        "action": "create_basic_structure",
+        "description": "创建小程序基础目录结构",
+        "priority": "high",
+        "targetDirectories": [
+          "miniprogram",
+          "miniprogram/pages",
+          "miniprogram/components",
+          "miniprogram/utils",
+          "miniprogram/services",
+          "miniprogram/models",
+          "cloudfunctions",
+          "docs"
+        ]
+      },
+      {
+        "action": "init_config_files",
+        "description": "初始化配置文件",
+        "priority": "high",
+        "targetFiles": [
+          "app.json",
+          "app.js",
+          "project.config.json",
+          "package.json",
+          "tsconfig.json",
+          ".gitignore"
+        ]
+      },
+      {
+        "action": "setup_dev_environment",
+        "description": "设置开发环境配置",
+        "priority": "medium",
+        "details": [
+          "ESLint配置",
+          "Prettier配置",
+          "Jest测试配置",
+          "微信开发者工具配置"
+        ]
+      }
+    ],
+    "modulePriorities": [
+      {
+        "module": "miniprogram/pages",
+        "reason": "核心用户界面，直接影响用户体验",
+        "suggestedOrder": [
+          "home - 首页",
+          "technician/list - 技师列表",
+          "technician/detail - 技师详情",
+          "order/create - 创建预约",
+          "order/list - 订单列表",
+          "user/profile - 用户中心"
+        ]
+      },
+      {
+        "module": "cloudfunctions",
+        "reason": "后端业务逻辑支撑",
+        "suggestedOrder": [
+          "user - 用户管理",
+          "technician - 技师管理",
+          "order - 订单管理",
+          "payment - 支付处理"
+        ]
+      }
+    ]
+  },
+  "stats": {
+    "linesOfCode": 0,
+    "filesByType": {
+      "markdown": 1,
+      "javascript": 0,
+      "typescript": 0,
+      "json": 0,
+      "wxml": 0,
+      "wxss": 0
+    },
+    "directories": {
+      "total": 2,
+      "withCode": 0,
+      "withDocs": 2
+    }
+  }
+}

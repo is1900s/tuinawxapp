@@ -1,0 +1,294 @@
+<!-- 地址选择组件 -->
+<view class="address-selector">
+  <!-- 组件标题 -->
+  <view class="selector-header" wx:if="{{showHeader}}">
+    <text class="selector-title">{{title}}</text>
+    <text class="selector-subtitle" wx:if="{{subtitle}}">{{subtitle}}</text>
+  </view>
+
+  <!-- 地址列表 -->
+  <scroll-view class="address-scroll" scroll-y="true" style="height: {{scrollHeight}}">
+    <view class="address-list">
+      <!-- 当前位置 -->
+      <view class="current-location" bindtap="onCurrentLocationTap">
+        <view class="location-icon">📍</view>
+        <view class="location-info">
+          <text class="location-title">当前位置</text>
+          <text class="location-desc">{{currentLocation.address || '正在获取位置信息...'}}</text>
+        </view>
+        <view class="location-status {{locationLoading ? 'loading' : ''}}">
+          <text class="status-text">{{locationLoading ? '定位中...' : '使用此位置'}}</text>
+        </view>
+      </view>
+
+      <!-- 已保存地址 -->
+      <view class="saved-addresses" wx:if="{{addressList.length > 0}}">
+        <view class="section-header">
+          <text class="section-title">已保存地址</text>
+          <text class="section-action" bindtap="onAddNewAddress" wx:if="{{allowAddNew}}">
+            <text class="action-icon">+</text>
+            <text class="action-text">新增地址</text>
+          </text>
+        </view>
+
+        <view
+          class="address-item {{selectedAddress.id === item.id ? 'selected' : ''}}"
+          wx:for="{{addressList}}"
+          wx:key="id"
+          bindtap="onAddressSelect"
+          data-address="{{item}}"
+        >
+          <view class="address-content">
+            <!-- 地址信息 -->
+            <view class="address-info">
+              <view class="address-header">
+                <text class="address-name">{{item.name}}</text>
+                <text class="address-phone">{{item.phone}}</text>
+                <view class="address-tags">
+                  <text class="tag tag-default" wx:if="{{item.isDefault}}">默认</text>
+                  <text class="tag tag-home" wx:if="{{item.type === 'home'}}">家</text>
+                  <text class="tag tag-company" wx:if="{{item.type === 'company'}}">公司</text>
+                </view>
+              </view>
+              <text class="address-detail">{{item.fullAddress}}</text>
+              <view class="address-note" wx:if="{{item.note}}">
+                <text class="note-icon">📝</text>
+                <text class="note-text">{{item.note}}</text>
+              </view>
+            </view>
+
+            <!-- 距离信息（如果提供） -->
+            <view class="distance-info" wx:if="{{item.distance}}">
+              <text class="distance">{{item.distance}}km</text>
+            </view>
+          </view>
+
+          <!-- 操作按钮 -->
+          <view class="address-actions">
+            <view
+              class="action-btn edit-btn"
+              bindtap="onEditAddress"
+              data-address="{{item}}"
+              wx:if="{{allowEdit}}"
+            >
+              <text class="action-icon">✏️</text>
+            </view>
+            <view
+              class="action-btn delete-btn"
+              bindtap="onDeleteAddress"
+              data-address="{{item}}"
+              wx:if="{{allowDelete}}"
+            >
+              <text class="action-icon">🗑️</text>
+            </view>
+          </view>
+
+          <!-- 选中指示器 -->
+          <view class="select-indicator" wx:if="{{selectedAddress.id === item.id}}">
+            <text class="indicator-icon">✓</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 空状态 -->
+      <view class="empty-state" wx:if="{{addressList.length === 0 && !locationLoading}}">
+        <text class="empty-icon">📍</text>
+        <text class="empty-title">暂无保存的地址</text>
+        <text class="empty-desc">添加常用地址，方便快速选择</text>
+        <button class="btn btn-primary" bindtap="onAddNewAddress" wx:if="{{allowAddNew}}">
+          添加新地址
+        </button>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 快速选择（紧凑模式） -->
+  <view class="quick-select" wx:if="{{quickMode && addressList.length > 0}}">
+    <view class="quick-options">
+      <view
+        class="quick-option {{selectedAddress.id === item.id ? 'selected' : ''}}"
+        wx:for="{{addressList.slice(0, 3)}}"
+        wx:key="id"
+        bindtap="onAddressSelect"
+        data-address="{{item}}"
+      >
+        <text class="quick-icon">{{item.type === 'home' ? '🏠' : item.type === 'company' ? '🏢' : '📍'}}</text>
+        <text class="quick-name">{{item.name}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-buttons" wx:if="{{showActions && !quickMode}}">
+    <button class="btn btn-outline" bindtap="onCancel" wx:if="{{showCancel}}">取消</button>
+    <button
+      class="btn btn-primary"
+      bindtap="onConfirm"
+      disabled="{{!selectedAddress.id && !currentLocation.address}}"
+    >确认选择</button>
+  </view>
+
+  <!-- 选中地址信息展示 -->
+  <view class="selected-address-info" wx:if="{{showSelectedInfo && (selectedAddress.id || currentLocation.address)}}" bindtap="onReselect">
+    <view class="selected-header">
+      <text class="selected-title">服务地址</text>
+      <text class="selected-change">修改</text>
+    </view>
+    <view class="selected-details">
+      <view class="selected-icon">📍</view>
+      <view class="selected-info">
+        <text class="selected-name">
+          {{selectedAddress.name || '当前位置'}}
+          <text class="selected-phone" wx:if="{{selectedAddress.phone}}">{{selectedAddress.phone}}</text>
+        </text>
+        <text class="selected-address">{{selectedAddress.fullAddress || currentLocation.address}}</text>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 地址编辑弹窗 -->
+<view class="address-edit-modal {{showEditModal ? 'show' : ''}}" bindtap="onEditModalClose">
+  <view class="edit-content" catchtap="onEditModalContentTap">
+    <view class="edit-header">
+      <text class="edit-title">{{editMode === 'add' ? '添加地址' : '编辑地址'}}</text>
+      <text class="edit-close" bindtap="onEditModalClose">×</text>
+    </view>
+
+    <view class="edit-form">
+      <!-- 地址类型 -->
+      <view class="form-group">
+        <text class="form-label">地址类型</text>
+        <radio-group class="type-selector" bindchange="onTypeChange">
+          <label class="type-option">
+            <radio value="home" checked="{{editForm.type === 'home'}}" />
+            <text class="type-text">家</text>
+          </label>
+          <label class="type-option">
+            <radio value="company" checked="{{editForm.type === 'company'}}" />
+            <text class="type-text">公司</text>
+          </label>
+          <label class="type-option">
+            <radio value="other" checked="{{editForm.type === 'other'}}" />
+            <text class="type-text">其他</text>
+          </label>
+        </radio-group>
+      </view>
+
+      <!-- 联系人 -->
+      <view class="form-group">
+        <text class="form-label">联系人</text>
+        <input
+          class="form-input"
+          type="text"
+          placeholder="请输入联系人姓名"
+          value="{{editForm.name}}"
+          bindinput="onNameInput"
+          maxlength="20"
+        />
+      </view>
+
+      <!-- 电话号码 -->
+      <view class="form-group">
+        <text class="form-label">电话号码</text>
+        <input
+          class="form-input"
+          type="number"
+          placeholder="请输入电话号码"
+          value="{{editForm.phone}}"
+          bindinput="onPhoneInput"
+          maxlength="11"
+        />
+      </view>
+
+      <!-- 地区选择 -->
+      <view class="form-group">
+        <text class="form-label">所在地区</text>
+        <picker
+          mode="region"
+          value="{{editForm.region}}"
+          bindchange="onRegionChange"
+        >
+          <view class="picker-view">
+            <text class="picker-text">{{editForm.region.join('') || '请选择省市区'}}</text>
+            <text class="picker-arrow">▼</text>
+          </view>
+        </picker>
+      </view>
+
+      <!-- 详细地址 -->
+      <view class="form-group">
+        <text class="form-label">详细地址</text>
+        <textarea
+          class="form-textarea"
+          placeholder="请输入详细地址（街道、门牌号等）"
+          value="{{editForm.detailAddress}}"
+          bindinput="onDetailAddressInput"
+          maxlength="100"
+        />
+      </view>
+
+      <!-- 备注 -->
+      <view class="form-group">
+        <text class="form-label">备注信息</text>
+        <textarea
+          class="form-textarea"
+          placeholder="请输入备注信息（选填）"
+          value="{{editForm.note}}"
+          bindinput="onNoteInput"
+          maxlength="50"
+        />
+      </view>
+
+      <!-- 设为默认 -->
+      <view class="form-group">
+        <checkbox-group bindchange="onDefaultChange">
+          <label class="checkbox-label">
+            <checkbox value="default" checked="{{editForm.isDefault}}" />
+            <text class="checkbox-text">设为默认地址</text>
+          </label>
+        </checkbox-group>
+      </view>
+    </view>
+
+    <view class="edit-footer">
+      <button class="btn btn-outline" bindtap="onEditModalClose">取消</button>
+      <button class="btn btn-primary" bindtap="onSaveAddress">保存</button>
+    </view>
+  </view>
+</view>
+
+<!-- 地图选择模式 -->
+<view class="map-selector" wx:if="{{showMapSelector}}">
+  <view class="map-header">
+    <text class="map-title">在地图上选择位置</text>
+    <text class="map-close" bindtap="onMapSelectorClose">×</text>
+  </view>
+
+  <!-- 地图容器 -->
+  <map
+    class="map-container"
+    latitude="{{mapCenter.latitude}}"
+    longitude="{{mapCenter.longitude}}"
+    scale="16"
+    show-location="{{true}}"
+    bindtap="onMapTap"
+    bindmarkertap="onMarkerTap"
+  >
+    <!-- 当前位置标记 -->
+    <cover-view class="current-marker" wx:if="{{selectedLocation}}">
+      <cover-view class="marker-icon">📍</cover-view>
+    </cover-view>
+  </map>
+
+  <!-- 地址信息 -->
+  <view class="map-address-info" wx:if="{{selectedLocation.address}}">
+    <text class="map-address">{{selectedLocation.address}}</text>
+  </view>
+
+  <!-- 确认按钮 -->
+  <view class="map-actions">
+    <button class="btn btn-outline" bindtap="onMapSelectorClose">取消</button>
+    <button class="btn btn-primary" bindtap="onMapConfirm">确认位置</button>
+  </view>
+</view>

@@ -1,0 +1,39 @@
+{
+  "compilerOptions": {
+    "target": "ES2018",
+    "module": "CommonJS",
+    "lib": ["ES2018"],
+    "outDir": "./dist",
+    "rootDir": "./miniprogram",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["miniprogram/*"],
+      "@/components/*": ["miniprogram/components/*"],
+      "@/utils/*": ["miniprogram/utils/*"],
+      "@/services/*": ["miniprogram/services/*"],
+      "@/models/*": ["miniprogram/models/*"]
+    },
+    "typeRoots": ["./node_modules/@types", "./typings"],
+    "types": ["node", "jest"]
+  },
+  "include": [
+    "miniprogram/**/*.ts",
+    "miniprogram/**/*.js",
+    "typings/**/*.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.spec.ts",
+    "**/*.test.ts"
+  ]
+}

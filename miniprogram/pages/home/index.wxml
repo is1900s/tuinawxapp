@@ -1,0 +1,125 @@
+<!-- 首页 -->
+<view class="home-page">
+  <!-- 顶部搜索栏 -->
+  <view class="search-bar">
+    <view class="search-input" bindtap="onSearchTap">
+      <text class="search-icon">🔍</text>
+      <text class="search-placeholder">搜索服务项目或技师</text>
+    </view>
+    <view class="location-btn" bindtap="onLocationTap">
+      <text class="location-icon">📍</text>
+      <text class="location-text">{{locationText}}</text>
+    </view>
+  </view>
+
+  <!-- 服务分类 -->
+  <view class="service-categories">
+    <view class="section-header">
+      <text class="section-title">服务分类</text>
+      <text class="section-more" bindtap="onMoreCategories">更多</text>
+    </view>
+    <view class="category-grid">
+      <view
+        class="category-item"
+        wx:for="{{categories}}"
+        wx:key="id"
+        bindtap="onCategoryTap"
+        data-category="{{item}}"
+      >
+        <image class="category-icon" src="{{item.icon}}" mode="aspectFit" />
+        <text class="category-name">{{item.name}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 推荐技师 -->
+  <view class="recommended-technicians">
+    <view class="section-header">
+      <text class="section-title">推荐技师</text>
+      <text class="section-more" bindtap="onMoreTechnicians">更多</text>
+    </view>
+    <scroll-view class="technician-list" scroll-x="true">
+      <view
+        class="technician-item"
+        wx:for="{{technicians}}"
+        wx:key="id"
+        bindtap="onTechnicianTap"
+        data-technician="{{item}}"
+      >
+        <image class="technician-avatar" src="{{item.avatar}}" mode="aspectFill" />
+        <view class="technician-info">
+          <text class="technician-name">{{item.name}}</text>
+          <view class="technician-rating">
+            <text class="rating-stars">{{item.rating}} ⭐</text>
+            <text class="rating-count">({{item.orderCount}}单)</text>
+          </view>
+          <text class="technician-distance">{{item.distance}}km</text>
+        </view>
+        <view class="technician-tags">
+          <text
+            class="tag"
+            wx:for="{{item.tags}}"
+            wx:for-item="tag"
+            wx:key="*this"
+          >{{tag}}</text>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 特惠活动 -->
+  <view class="special-offers">
+    <view class="section-header">
+      <text class="section-title">特惠活动</text>
+      <text class="section-more" bindtap="onMoreOffers">更多</text>
+    </view>
+    <swiper class="offer-swiper" indicator-dots="{{true}}" autoplay="{{true}}" interval="{{3000}}" duration="{{500}}">
+      <swiper-item wx:for="{{offers}}" wx:key="id">
+        <view class="offer-item" bindtap="onOfferTap" data-offer="{{item}}">
+          <image class="offer-image" src="{{item.image}}" mode="aspectFill" />
+          <view class="offer-info">
+            <text class="offer-title">{{item.title}}</text>
+            <text class="offer-desc">{{item.description}}</text>
+            <view class="offer-price">
+              <text class="price-current">¥{{item.currentPrice}}</text>
+              <text class="price-original">¥{{item.originalPrice}}</text>
+            </view>
+          </view>
+        </view>
+      </swiper-item>
+    </swiper>
+  </view>
+
+  <!-- 用户评价 -->
+  <view class="user-reviews">
+    <view class="section-header">
+      <text class="section-title">用户评价</text>
+      <text class="section-more" bindtap="onMoreReviews">更多</text>
+    </view>
+    <view class="review-list">
+      <view class="review-item" wx:for="{{reviews}}" wx:key="id">
+        <view class="review-header">
+          <image class="reviewer-avatar" src="{{item.userAvatar}}" mode="aspectFill" />
+          <view class="reviewer-info">
+            <text class="reviewer-name">{{item.userName}}</text>
+            <text class="review-date">{{item.date}}</text>
+          </view>
+          <view class="review-rating">
+            <text class="rating-stars">{{item.rating}} ⭐</text>
+          </view>
+        </view>
+        <text class="review-content">{{item.content}}</text>
+        <view class="review-service" wx:if="{{item.serviceName}}">
+          <text class="service-name">服务项目：{{item.serviceName}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 自定义导航栏（如果需要） -->
+<view class="custom-navbar" wx:if="{{showCustomNavbar}}">
+  <view class="navbar-content">
+    <text class="navbar-title">同城推拿</text>
+  </view>
+</view>

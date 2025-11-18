@@ -1,0 +1,338 @@
+<!-- 帮助反馈页面 -->
+<view class="help-page">
+  <!-- 页面头部 -->
+  <view class="page-header">
+    <text class="page-title">帮助与反馈</text>
+  </view>
+
+  <!-- 搜索框 -->
+  <view class="search-section">
+    <view class="search-bar">
+      <text class="search-icon">🔍</text>
+      <input
+        class="search-input"
+        type="text"
+        placeholder="搜索帮助内容"
+        value="{{searchKeyword}}"
+        bindinput="onSearchInput"
+        bindconfirm="onSearchConfirm"
+      />
+      <view class="clear-btn" wx:if="{{searchKeyword}}" bindtap="onClearSearch">
+        <text class="clear-icon">×</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 快捷入口 -->
+  <view class="quick-links">
+    <view class="quick-link" bindtap="onContactService">
+      <text class="link-icon">📞</text>
+      <text class="link-title">联系客服</text>
+      <text class="link-desc">7×24小时在线</text>
+    </view>
+    <view class="quick-link" bindtap="onFAQ">
+      <text class="link-icon">❓</text>
+      <text class="link-title">常见问题</text>
+      <text class="link-desc">快速解答</text>
+    </view>
+    <view class="quick-link" bindtap="onUserGuide">
+      <text class="link-icon">📖</text>
+      <text class="link-title">使用指南</text>
+      <text class="link-desc">新手教程</text>
+    </view>
+  </view>
+
+  <!-- 帮助分类 -->
+  <view class="help-categories">
+    <view class="category-header">
+      <text class="category-title">帮助分类</text>
+    </view>
+
+    <view class="category-list">
+      <view
+        class="category-item"
+        wx:for="{{helpCategories}}"
+        wx:key="id"
+        bindtap="onCategoryTap"
+        data-category="{{item}}"
+      >
+        <text class="category-icon">{{item.icon}}</text>
+        <view class="category-info">
+          <text class="category-name">{{item.name}}</text>
+          <text class="category-desc">{{item.description}}</text>
+        </view>
+        <text class="category-arrow">></text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 常见问题 -->
+  <view class="faq-section">
+    <view class="section-header">
+      <text class="section-title">常见问题</text>
+      <text class="section-more" bindtap="onMoreFAQ">更多 ></text>
+    </view>
+
+    <view class="faq-list">
+      <view
+        class="faq-item"
+        wx:for="{{popularFAQs}}"
+        wx:key="id"
+        bindtap="onFAQItemTap"
+        data-faq="{{item}}"
+      >
+        <view class="faq-question">
+          <text class="question-text">{{item.question}}</text>
+          <text class="expand-icon {{item.expanded ? 'expanded' : ''}}">▼</text>
+        </view>
+        <view class="faq-answer" wx:if="{{item.expanded}}">
+          <text class="answer-text">{{item.answer}}</text>
+          <view class="answer-actions" wx:if="{{item.actions}}">
+            <text
+              class="action-btn"
+              wx:for="{{item.actions}}"
+              wx:for-item="action"
+              wx:key="text"
+              bindtap="onActionTap"
+              data-action="{{action}}"
+            >{{action.text}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 意见反馈 -->
+  <view class="feedback-section">
+    <view class="section-header">
+      <text class="section-title">意见反馈</text>
+    </view>
+
+    <view class="feedback-form">
+      <!-- 反馈类型 -->
+      <view class="form-group">
+        <text class="form-label">反馈类型</text>
+        <radio-group class="type-selector" bindchange="onFeedbackTypeChange">
+          <label class="type-option" wx:for="{{feedbackTypes}}" wx:key="value">
+            <radio value="{{item.value}}" checked="{{feedbackForm.type === item.value}}" />
+            <text class="type-text">{{item.label}}</text>
+          </label>
+        </radio-group>
+      </view>
+
+      <!-- 反馈内容 -->
+      <view class="form-group">
+        <text class="form-label required">反馈内容</text>
+        <textarea
+          class="feedback-textarea"
+          placeholder="请详细描述您遇到的问题或建议..."
+          value="{{feedbackForm.content}}"
+          bindinput="onFeedbackContentInput"
+          maxlength="500"
+        />
+        <text class="form-count">{{feedbackForm.content.length}}/500</text>
+      </view>
+
+      <!-- 图片上传 -->
+      <view class="form-group">
+        <text class="form-label">上传图片</text>
+        <view class="image-upload">
+          <view class="upload-grid">
+            <view
+              class="uploaded-item"
+              wx:for="{{feedbackForm.images}}"
+              wx:key="*this"
+            >
+              <image class="uploaded-image" src="{{item}}" mode="aspectFill" bindtap="onImagePreview" data-urls="{{feedbackForm.images}}" data-current="{{item}}" />
+              <view class="image-delete" bindtap="onDeleteImage" data-index="{{index}}">
+                <text class="delete-icon">×</text>
+              </view>
+            </view>
+            <view class="upload-btn" bindtap="onChooseImage" wx:if="{{feedbackForm.images.length < 4}}">
+              <text class="upload-icon">📷</text>
+              <text class="upload-text">添加图片</text>
+            </view>
+          </view>
+          <text class="upload-tip">最多上传4张图片，支持JPG、PNG格式</text>
+        </view>
+      </view>
+
+      <!-- 联系方式 -->
+      <view class="form-group">
+        <text class="form-label">联系手机</text>
+        <input
+          class="form-input"
+          type="number"
+          placeholder="选填，方便我们联系您"
+          value="{{feedbackForm.phone}}"
+          bindinput="onPhoneInput"
+          maxlength="11"
+        />
+      </view>
+
+      <!-- 提交按钮 -->
+      <button
+        class="submit-btn"
+        bindtap="onSubmitFeedback"
+        disabled="{{!canSubmitFeedback}}"
+      >
+        提交反馈
+      </button>
+    </view>
+  </view>
+
+  <!-- 服务信息 -->
+  <view class="service-info">
+    <view class="section-header">
+      <text class="section-title">服务信息</text>
+    </view>
+
+    <view class="info-list">
+      <view class="info-item">
+        <text class="info-icon">🕐</text>
+        <view class="info-content">
+          <text class="info-title">服务时间</text>
+          <text class="info-desc">7×24小时在线客服</text>
+        </view>
+      </view>
+      <view class="info-item">
+        <text class="info-icon">⚡</text>
+        <view class="info-content">
+          <text class="info-title">响应速度</text>
+          <text class="info-desc">平均2分钟内响应</text>
+        </view>
+      </view>
+      <view class="info-item">
+        <text class="info-icon">📱</text>
+        <view class="info-content">
+          <text class="info-title">服务热线</text>
+          <text class="info-desc" bindtap="onCallService">400-123-4567</text>
+        </view>
+      </view>
+      <view class="info-item">
+        <text class="info-icon">📧</text>
+        <view class="info-content">
+          <text class="info-title">邮箱支持</text>
+          <text class="info-desc" bindtap="onEmailService">support@tuinawxapp.com</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 版本信息 -->
+  <view class="version-info">
+    <text class="app-name">同城推拿</text>
+    <text class="app-version">版本 {{appVersion}}</text>
+    <text class="update-desc" bindtap="onCheckUpdate" wx:if="{{hasUpdate}}">发现新版本，点击更新</text>
+  </view>
+</view>
+
+<!-- 搜索结果弹窗 -->
+<view class="search-modal {{showSearchModal ? 'show' : ''}}" bindtap="onSearchModalClose">
+  <view class="search-content" catchtap="onSearchModalContentTap">
+    <view class="search-header">
+      <text class="search-title">搜索结果</text>
+      <text class="search-close" bindtap="onSearchModalClose">×</text>
+    </view>
+
+    <scroll-view class="search-results" scroll-y="true">
+      <view class="result-list">
+        <view
+          class="result-item"
+          wx:for="{{searchResults}}"
+          wx:key="id"
+          bindtap="onResultTap"
+          data-result="{{item}}"
+        >
+          <text class="result-title">{{item.title}}</text>
+          <text class="result-category">{{item.category}}</text>
+        </view>
+      </view>
+
+      <view class="empty-search" wx:if="{{searchResults.length === 0}}">
+        <text class="empty-icon">🔍</text>
+        <text class="empty-title">未找到相关内容</text>
+        <text class="empty-desc">尝试使用其他关键词搜索</text>
+      </view>
+    </scroll-view>
+  </view>
+</view>
+
+<!-- 联系客服弹窗 -->
+<view class="contact-modal {{showContactModal ? 'show' : ''}}" bindtap="onContactModalClose">
+  <view class="contact-content" catchtap="onContactModalContentTap">
+    <view class="contact-header">
+      <text class="contact-title">联系客服</text>
+      <text class="contact-close" bindtap="onContactModalClose">×</text>
+    </view>
+
+    <view class="contact-options">
+      <view class="contact-option" bindtap="onPhoneCall">
+        <text class="contact-icon">📞</text>
+        <view class="contact-info">
+          <text class="contact-title">电话客服</text>
+          <text class="contact-desc">400-123-4567</text>
+          <text class="contact-time">7×24小时</text>
+        </view>
+      </view>
+
+      <view class="contact-option" bindtap="onOnlineChat">
+        <text class="contact-icon">💬</text>
+        <view class="contact-info">
+          <text class="contact-title">在线客服</text>
+          <text class="contact-desc">平均2分钟响应</text>
+          <text class="contact-status online">在线</text>
+        </view>
+      </view>
+
+      <view class="contact-option" bindtap="onWechatContact">
+        <text class="contact-icon">💬</text>
+        <view class="contact-info">
+          <text class="contact-title">微信客服</text>
+          <text class="contact-desc">微信号：tuinawxapp</text>
+          <text class="contact-status">扫码添加</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="contact-tips">
+      <text class="tips-title">客服小贴士</text>
+      <view class="tips-list">
+        <text class="tip-item">• 工作日9:00-18:00响应速度更快</text>
+        <text class="tip-item">• 提供订单号可更快解决问题</text>
+        <text class="tip-item">• 紧急问题请直接致电客服热线</text>
+        <text class="tip-item">常见问题建议先查看FAQ</text>
+      </view>
+    </view>
+  </view>
+</view>
+
+<!-- 图片预览 -->
+<view class="image-preview-modal {{showImagePreview ? 'show' : ''}}" bindtap="onImagePreviewClose">
+  <view class="preview-content" catchtap="onImagePreviewContentTap">
+    <swiper
+      class="preview-swiper"
+      indicator-dots="{{previewImages.length > 1}}"
+      current="{{previewIndex}}"
+      bindchange="onPreviewChange"
+    >
+      <swiper-item wx:for="{{previewImages}}" wx:key="*this">
+        <image class="preview-image" src="{{item}}" mode="aspectFit" />
+      </swiper-item>
+    </swiper>
+    <text class="preview-close" bindtap="onImagePreviewClose">×</text>
+  </view>
+</view>
+
+<!-- 反馈提交成功弹窗 -->
+<view class="success-modal {{showSuccessModal ? 'show' : ''}}" bindtap="onSuccessModalClose">
+  <view class="success-content" catchtap="onSuccessModalContentTap">
+    <view class="success-icon">✓</view>
+    <text class="success-title">提交成功</text>
+    <text class="success-desc">感谢您的反馈，我们会尽快处理</text>
+    <button class="btn btn-primary" bindtap="onSuccessModalClose">确定</button>
+  </view>
+</view>
+
+<!-- 底部安全区域 -->
+<view class="safe-area-bottom"></view>

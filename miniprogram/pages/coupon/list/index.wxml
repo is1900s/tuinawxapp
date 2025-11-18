@@ -1,0 +1,421 @@
+<!-- 优惠券列表页 -->
+<view class="coupon-list-page">
+  <!-- 页面头部 -->
+  <view class="page-header">
+    <text class="page-title">我的优惠券</text>
+    <view class="coupon-stats">
+      <text class="stats-text">{{couponStats.available}}张可用</text>
+    </view>
+  </view>
+
+  <!-- 优惠券类型标签 -->
+  <view class="coupon-tabs">
+    <scroll-view class="tabs-scroll" scroll-x="true">
+      <view class="tabs-list">
+        <text
+          class="tab-item {{currentTab === 'available' ? 'active' : ''}}"
+          bindtap="onTabChange"
+          data-tab="available"
+        >
+          可使用
+          <view class="tab-badge" wx:if="{{couponStats.available > 0}}">
+            <text class="badge-count">{{couponStats.available}}</text>
+          </view>
+        </text>
+        <text
+          class="tab-item {{currentTab === 'used' ? 'active' : ''}}"
+          bindtap="onTabChange"
+          data-tab="used"
+        >
+          已使用
+          <view class="tab-badge" wx:if="{{couponStats.used > 0}}">
+            <text class="badge-count">{{couponStats.used}}</text>
+          </view>
+        </text>
+        <text
+          class="tab-item {{currentTab === 'expired' ? 'active' : ''}}"
+          bindtap="onTabChange"
+          data-tab="expired"
+        >
+          已过期
+          <view class="tab-badge" wx:if="{{couponStats.expired > 0}}">
+            <text class="badge-count">{{couponStats.expired}}</text>
+          </view>
+        </text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 优惠券列表 -->
+  <scroll-view class="coupon-scroll" scroll-y="true" style="height: {{scrollHeight}}" bindscrolltolower="onLoadMore">
+    <view class="coupon-list">
+      <!-- 可用优惠券 -->
+      <view class="available-coupons" wx:if="{{currentTab === 'available'}}">
+        <!-- VIP专享优惠券 -->
+        <view class="vip-section" wx:if="{{vipCoupons.length > 0}}">
+          <view class="vip-header">
+            <text class="vip-title">VIP专享</text>
+            <text class="vip-badge">仅限会员</text>
+          </view>
+          <view class="coupon-grid">
+            <view
+              class="coupon-card vip"
+              wx:for="{{vipCoupons}}"
+              wx:key="id"
+              bindtap="onCouponTap"
+              data-coupon="{{item}}"
+            >
+              <!-- 优惠券设计 -->
+              <view class="coupon-design">
+                <view class="coupon-left">
+                  <view class="coupon-amount">
+                    <text class="amount-symbol">¥</text>
+                    <text class="amount-value">{{item.discount}}</text>
+                  </view>
+                  <text class="coupon-condition">{{item.minAmount > 0 ? `满${item.minAmount}元可用` : '无门槛'}}</text>
+                </view>
+                <view class="coupon-divider">
+                  <view class="divider-dots">
+                    <text class="dot" wx:for="{{[1,2,3,4,5,6]}}" wx:key="*this">•</text>
+                  </view>
+                </view>
+                <view class="coupon-right">
+                  <text class="coupon-title">{{item.name}}</text>
+                  <text class="coupon-desc">{{item.description}}</text>
+                  <view class="coupon-expire">
+                    <text class="expire-text">有效期至 {{item.expireDate}}</text>
+                  </view>
+                </view>
+              </view>
+
+              <!-- VIP标识 -->
+              <view class="vip-overlay">
+                <text class="vip-icon">👑</text>
+                <text class="vip-text">VIP专享</text>
+              </view>
+
+              <!-- 使用按钮 -->
+              <view class="coupon-action">
+                <button class="use-btn" bindtap="onUseCoupon" data-coupon="{{item}}">
+                  立即使用
+                </button>
+              </view>
+            </view>
+          </view>
+
+          <!-- 普通优惠券 -->
+          <view class="regular-coupons" wx:if="{{regularCoupons.length > 0}}">
+            <view class="section-header" wx:if="{{vipCoupons.length > 0}}">
+              <text class="section-title">通用优惠券</text>
+            </view>
+            <view class="coupon-list-vertical">
+              <view
+                class="coupon-card regular {{item.isUrgent ? 'urgent' : ''}}"
+                wx:for="{{regularCoupons}}"
+                wx:key="id"
+                bindtap="onCouponTap"
+                data-coupon="{{item}}"
+              >
+                <view class="coupon-design">
+                  <view class="coupon-left">
+                    <view class="coupon-amount">
+                      <text class="amount-symbol">¥</text>
+                      <text class="amount-value">{{item.discount}}</text>
+                    </view>
+                    <text class="coupon-condition">{{item.minAmount > 0 ? `满${item.minAmount}元可用` : '无门槛'}}</text>
+                  </view>
+                  <view class="coupon-divider">
+                    <view class="divider-dots">
+                      <text class="dot" wx:for="{{[1,2,3,4,5,6]}}" wx:key="*this">•</text>
+                    </view>
+                  </view>
+                  <view class="coupon-right">
+                    <text class="coupon-title">{{item.name}}</text>
+                    <text class="coupon-desc">{{item.description}}</text>
+                    <view class="coupon-meta">
+                      <text class="expire-text">{{item.expireDate}}前有效</text>
+                      <text class="usage-limit" wx:if="{{item.usageLimit}}">限{{item.usageLimit}}次</text>
+                    </view>
+                  </view>
+                </view>
+
+                <!-- 紧急标识 -->
+                <view class="urgent-badge" wx:if="{{item.isUrgent}}">
+                  <text class="urgent-text">紧急</text>
+                </view>
+
+                <!-- 使用按钮 -->
+                <view class="coupon-action">
+                  <button class="use-btn" bindtap="onUseCoupon" data-coupon="{{item}}">
+                    立即使用
+                  </button>
+                </view>
+              </view>
+            </view>
+          </view>
+
+          <!-- 空状态 -->
+          <view class="empty-coupons" wx:if="{{vipCoupons.length === 0 && regularCoupons.length === 0}}">
+            <text class="empty-icon">🎫</text>
+            <text class="empty-title">暂无可用优惠券</text>
+            <text class="empty-desc">快去看看有什么优惠活动吧</text>
+            <button class="btn btn-primary" bindtap="onGoToActivities">
+              查看活动
+            </button>
+          </view>
+        </view>
+
+        <!-- 已使用优惠券 -->
+        <view class="used-coupons" wx:if="{{currentTab === 'used'}}">
+          <view class="coupon-list-vertical">
+            <view
+              class="coupon-card used"
+              wx:for="{{usedCoupons}}"
+              wx:key="id"
+              bindtap="onUsedCouponTap"
+              data-coupon="{{item}}"
+            >
+              <view class="coupon-design">
+                <view class="coupon-left">
+                  <view class="coupon-amount">
+                    <text class="amount-symbol">¥</text>
+                    <text class="amount-value">{{item.discount}}</text>
+                  </view>
+                  <text class="coupon-condition">{{item.minAmount > 0 ? `满${item.minAmount}元可用` : '无门槛'}}</text>
+                </view>
+                <view class="coupon-divider">
+                  <view class="divider-dots">
+                    <text class="dot" wx:for="{{[1,2,3,4,5,6]}}" wx:key="*this">•</text>
+                  </view>
+                </view>
+                <view class="coupon-right">
+                  <text class="coupon-title">{{item.name}}</text>
+                  <text class="coupon-desc">{{item.description}}</text>
+                  <view class="coupon-meta">
+                    <text class="used-text">已于 {{item.usedAt}} 使用</text>
+                    <text class="used-order">订单号：{{item.orderNo}}</text>
+                  </view>
+                </view>
+              </view>
+
+              <!-- 已使用标识 -->
+              <view class="used-overlay">
+                <text class="used-icon">✓</text>
+                <text class="used-label">已使用</text>
+              </view>
+            </view>
+          </view>
+
+          <!-- 空状态 -->
+          <view class="empty-coupons" wx:if="{{usedCoupons.length === 0}}">
+            <text class="empty-icon">📋</text>
+            <text class="empty-title">暂无已使用优惠券</text>
+            <text class="empty-desc">使用优惠券可以享受更多优惠</text>
+          </view>
+        </view>
+
+        <!-- 已过期优惠券 -->
+        <view class="expired-coupons" wx:if="{{currentTab === 'expired'}}">
+          <view class="coupon-list-vertical">
+            <view
+              class="coupon-card expired"
+              wx:for="{{expiredCoupons}}"
+              wx:key="id"
+              bindtap="onExpiredCouponTap"
+              data-coupon="{{item}}"
+            >
+              <view class="coupon-design">
+                <view class="coupon-left">
+                  <view class="coupon-amount">
+                    <text class="amount-symbol">¥</text>
+                    <text class="amount-value">{{item.discount}}</text>
+                  </view>
+                  <text class="coupon-condition">{{item.minAmount > 0 ? `满${item.minAmount}元可用` : '无门槛'}}</text>
+                </view>
+                <view class="coupon-divider">
+                  <view class="divider-dots">
+                    <text class="dot" wx:for="{{[1,2,3,4,5,6]}}" wx:key="*this">•</text>
+                  </view>
+                </view>
+                <view class="coupon-right">
+                  <text class="coupon-title">{{item.name}}</text>
+                  <text class="coupon-desc">{{item.description}}</text>
+                  <view class="coupon-meta">
+                    <text class="expired-text">已于 {{item.expireDate}} 过期</text>
+                  </view>
+                </view>
+              </view>
+
+              <!-- 已过期标识 -->
+              <view class="expired-overlay">
+                <text class="expired-icon">✗</text>
+                <text class="expired-label">已过期</text>
+              </view>
+            </view>
+          </view>
+
+          <!-- 空状态 -->
+          <view class="empty-coupons" wx:if="{{expiredCoupons.length === 0}}">
+            <text class="empty-icon">⏰</text>
+            <text class="empty-title">暂无已过期优惠券</text>
+            <text class="empty-desc">记得及时使用优惠券哦</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 加载状态 -->
+      <view class="load-more" wx:if="{{hasMore}}">
+        <text class="load-text">{{loading ? '加载中...' : '上拉加载更多'}}</text>
+      </view>
+
+      <!-- 没有更多数据 -->
+      <view class="no-more" wx:if="{{!hasMore && getCurrentCoupons().length > 0}}">
+        <text class="no-more-text">没有更多优惠券了</text>
+      </view>
+    </view>
+  </scroll-view>
+
+  <!-- 领券中心入口 -->
+  <view class="coupon-center-entry" wx:if="{{currentTab === 'available'}}">
+    <view class="entry-content" bindtap="onGoToCouponCenter">
+      <text class="entry-title">领券中心</text>
+      <text class="entry-desc">更多优惠等你来拿</text>
+      <text class="entry-arrow">></text>
+    </view>
+  </view>
+
+  <!-- 优惠券详情弹窗 -->
+  <view class="coupon-detail-modal {{showDetailModal ? 'show' : ''}}" bindtap="onDetailModalClose">
+    <view class="detail-content" catchtap="onDetailModalContentTap">
+      <view class="detail-header">
+        <text class="detail-title">优惠券详情</text>
+        <text class="detail-close" bindtap="onDetailModalClose">×</text>
+      </view>
+
+      <scroll-view class="detail-body" scroll-y="true" wx:if="{{selectedCoupon}}">
+        <!-- 优惠券预览 -->
+        <view class="coupon-preview">
+          <view class="coupon-card {{selectedCoupon.type || 'regular'}}">
+            <view class="coupon-design">
+              <view class="coupon-left">
+                <view class="coupon-amount">
+                  <text class="amount-symbol">¥</text>
+                  <text class="amount-value">{{selectedCoupon.discount}}</text>
+                </view>
+                <text class="coupon-condition">{{selectedCoupon.minAmount > 0 ? `满${selectedCoupon.minAmount}元可用` : '无门槛'}}</text>
+              </view>
+              <view class="coupon-divider">
+                <view class="divider-dots">
+                  <text class="dot" wx:for="{{[1,2,3,4,5,6]}}" wx:key="*this">•</text>
+                </view>
+              </view>
+              <view class="coupon-right">
+                <text class="coupon-title">{{selectedCoupon.name}}</text>
+                <text class="coupon-desc">{{selectedCoupon.description}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 使用说明 -->
+        <view class="usage-section">
+          <text class="section-title">使用说明</text>
+          <view class="usage-list">
+            <text class="usage-item">• 有效期：{{selectedCoupon.expireDate}}</text>
+            <text class="usage-item" wx:if="{{selectedCoupon.minAmount > 0}}">• 使用门槛：满{{selectedCoupon.minAmount}}元可用</text>
+            <text class="usage-item" wx:if="{{selectedCoupon.usageLimit}}">• 使用次数：限{{selectedCoupon.usageLimit}}次</text>
+            <text class="usage-item" wx:if="{{selectedCoupon.applicableServices}}">• 适用服务：{{selectedCoupon.applicableServices}}</text>
+            <text class="usage-item" wx:if="{{selectedCoupon.applicableTechnicians}}">• 适用技师：{{selectedCoupon.applicableTechnicians}}</text>
+            <text class="usage-item">• 每个订单限用一张优惠券</text>
+            <text class="usage-item">• 优惠券不可兑换现金</text>
+            <text class="usage-item">• 最终解释权归平台所有</text>
+          </view>
+        </view>
+
+        <!-- 使用记录 -->
+        <view class="history-section" wx:if="{{selectedCoupon.usageHistory}}">
+          <text class="section-title">使用记录</text>
+          <view class="history-list">
+            <view
+              class="history-item"
+              wx:for="{{selectedCoupon.usageHistory}}"
+              wx:key="id"
+            >
+              <text class="history-date">{{item.date}}</text>
+              <text class="history-order">订单号：{{item.orderNo}}</text>
+              <text class="history-amount">抵扣：¥{{item.discountAmount}}</text>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+
+      <view class="detail-footer">
+        <button class="btn btn-primary" bindtap="onUseCouponFromDetail" data-coupon="{{selectedCoupon}}">
+          立即使用
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 使用优惠券弹窗 -->
+  <view class="use-coupon-modal {{showUseModal ? 'show' : ''}}" bindtap="onUseModalClose">
+    <view class="use-content" catchtap="onUseModalContentTap">
+      <view class="use-header">
+        <text class="use-title">选择服务</text>
+        <text class="use-close" bindtap="onUseModalClose">×</text>
+      </view>
+
+      <scroll-view class="use-body" scroll-y="true">
+        <!-- 当前订单使用 -->
+        <view class="current-order-section" wx:if="{{currentOrder}}">
+          <text class="section-title">当前订单</text>
+          <view class="order-preview">
+            <text class="order-service">{{currentOrder.serviceName}}</text>
+            <text class="order-technician">技师：{{currentOrder.technicianName}}</text>
+            <text class="order-price">原价：¥{{currentOrder.originalPrice}}</text>
+            <text class="order-discount" wx:if="{{currentOrder.discount > 0}}">优惠：-¥{{currentOrder.discount}}</text>
+            <text class="order-final">实付：¥{{currentOrder.finalPrice}}</text>
+          </view>
+        </view>
+
+        <!-- 可用服务列表 -->
+        <view class="services-section">
+          <text class="section-title">可用服务</text>
+          <view class="services-list">
+            <view
+              class="service-item {{currentServiceId === item.id ? 'selected' : ''}}"
+              wx:for="{{availableServices}}"
+              wx:key="id"
+              bindtap="onServiceSelect"
+              data-service="{{item}}"
+            >
+              <image class="service-icon" src="{{item.icon}}" mode="aspectFit" />
+              <view class="service-info">
+                <text class="service-name">{{item.name}}</text>
+                <text class="service-price">¥{{item.price}}</text>
+                <text class="service-desc">{{item.description}}</text>
+              </view>
+              <view class="service-select">
+                <text class="select-icon">{{currentServiceId === item.id ? '✓' : ''}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </scroll-view>
+
+      <view class="use-footer">
+        <button class="btn btn-outline" bindtap="onUseModalClose">取消</button>
+        <button
+          class="btn btn-primary"
+          bindtap="onConfirmUse"
+          disabled="{{!currentServiceId && !currentOrder}}"
+        >
+          确认使用
+        </button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部安全区域 -->
+  <view class="safe-area-bottom"></view>
+</view>

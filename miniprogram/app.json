@@ -1,0 +1,60 @@
+{
+  "pages": [
+    "pages/home/index",
+    "pages/technician/list/index",
+    "pages/technician/detail/index",
+    "pages/order/create/index",
+    "pages/order/list/index",
+    "pages/order/detail/index",
+    "pages/user/profile/index",
+    "pages/user/address/index"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "同城推拿",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f8f8f8"
+  },
+  "tabBar": {
+    "color": "#999999",
+    "selectedColor": "#007AFF",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/home/index",
+        "text": "首页",
+        "iconPath": "images/tab-home.png",
+        "selectedIconPath": "images/tab-home-active.png"
+      },
+      {
+        "pagePath": "pages/technician/list/index",
+        "text": "技师",
+        "iconPath": "images/tab-technician.png",
+        "selectedIconPath": "images/tab-technician-active.png"
+      },
+      {
+        "pagePath": "pages/order/list/index",
+        "text": "订单",
+        "iconPath": "images/tab-order.png",
+        "selectedIconPath": "images/tab-order-active.png"
+      },
+      {
+        "pagePath": "pages/user/profile/index",
+        "text": "我的",
+        "iconPath": "images/tab-user.png",
+        "selectedIconPath": "images/tab-user-active.png"
+      }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于获取附近技师和计算服务距离"
+    }
+  },
+  "requiredBackgroundModes": ["location"],
+  "cloud": true,
+  "usingComponents": {},
+  "sitemapLocation": "sitemap.json"
+}
