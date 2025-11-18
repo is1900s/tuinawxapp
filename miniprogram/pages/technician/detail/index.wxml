@@ -379,3 +379,4 @@
 
 <!-- 安全区域适配 -->
 <view class="safe-area-bottom"></view>
+</scroll-view>
